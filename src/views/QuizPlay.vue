@@ -20,14 +20,12 @@ let timer: number;
 // 選択中の選択肢のインデックス（0-3）
 const selectedIndex = ref(0);
 
+// タップされた選択肢のインデックス（スマホ用の一時的な強調表示）
+const tappedIndex = ref<number | null>(null);
+
 // 画像読み込み状態
 const imagesLoaded = ref(false);
 const loadedImagesCount = ref(0);
-
-// 1問ごとのフィードバック関連のrefを削除
-// const selectedOptionId = ref<string | null>(null);
-// const isCorrectAnswer = ref<boolean | null>(null);
-// const feedbackActive = ref(false);
 
 // 画像の読み込みを監視
 const checkImagesLoaded = () => {
@@ -165,34 +163,26 @@ const handleKeydown = (e: KeyboardEvent) => {
       e.preventDefault();
       const selectedOption = quizStore.currentQuestion.options[selectedIndex.value];
       if (selectedOption) {
-        handleAnswer(selectedOption);
+        handleAnswer(selectedOption, selectedIndex.value);
       }
       break;
   }
 };
 
-const handleAnswer = (option: Country) => {
+const handleAnswer = (option: Country, index: number) => {
   if (!imagesLoaded.value) return; // 画像が読み込まれるまで回答を無効化
   
-  // 1問ごとのフィードバック関連のロジックを削除
-  // if (feedbackActive.value) return;
-
-  // feedbackActive.value = true;
-  // selectedOptionId.value = option.id;
-
-  // const isCorrect = option.id === quizStore.currentQuestion.correctAnswer.id;
-  // isCorrectAnswer.value = isCorrect;
-
-  quizStore.answerQuestion(option.id);
-
-  // setTimeout(() => {
-  //   selectedOptionId.value = null;
-  //   isCorrectAnswer.value = null;
-  //   feedbackActive.value = false;
-  //   if (quizStore.currentQuestionIndex < quizStore.questions.length) {
-  //     // 次の質問があればそのまま続行（quizStore.answerQuestionが自動で次の質問に進む）
-  //   }
-  // }, 1000);
+  // スマホの場合は一瞬だけ強調表示
+  const isMobile = window.innerWidth < 768;
+  if (isMobile) {
+    tappedIndex.value = index;
+    setTimeout(() => {
+      tappedIndex.value = null;
+      quizStore.answerQuestion(option.id);
+    }, 200); // 200msだけ強調表示
+  } else {
+    quizStore.answerQuestion(option.id);
+  }
 };
 
 // マウスホバー時に選択状態を更新
@@ -252,14 +242,16 @@ const handleMouseEnter = (index: number) => {
         <button
           v-for="(option, index) in quizStore.currentQuestion.options"
           :key="option.id"
-          @click="handleAnswer(option)"
+          @click="handleAnswer(option, index)"
           @mouseenter="handleMouseEnter(index)"
+          @touchstart="handleMouseEnter(index)"
           :disabled="!imagesLoaded"
           class="p-4 border-2 rounded-lg focus:outline-none bg-gray-50 transition-all"
           :class="{
-            'border-indigo-500 ring-2 ring-indigo-500 bg-indigo-50': selectedIndex === index && imagesLoaded,
-            'border-gray-300 hover:bg-gray-100': selectedIndex !== index && imagesLoaded,
-            'opacity-50 cursor-not-allowed': !imagesLoaded
+            'border-indigo-500 ring-2 ring-indigo-500 bg-indigo-50': tappedIndex === index || (selectedIndex === index && imagesLoaded),
+            'border-gray-300 hover:bg-gray-100': tappedIndex !== index && selectedIndex !== index && imagesLoaded,
+            'opacity-50 cursor-not-allowed': !imagesLoaded,
+            'max-md:!border-gray-300 max-md:!ring-0 max-md:!bg-gray-50': tappedIndex !== index && selectedIndex === index
           }"
         >
           <!-- 国旗を見て国名を選ぶ場合 -->
