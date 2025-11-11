@@ -202,13 +202,21 @@ const goToCountry = (index: number) => {
 
       <div class="w-full max-w-2xl mx-auto px-4 flex-shrink-0">
         <div class="flex justify-between items-center mb-4 mt-4">
-          <button @click="prevCountry" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+          <button 
+            @click="prevCountry" 
+            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            aria-label="前の国へ"
+          >
             {{ t.study.prev }}
           </button>
           <span class="text-lg font-semibold">
             {{ currentIndex + 1 }} / {{ filteredCountries.length }}
           </span>
-          <button @click="nextCountry" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+          <button 
+            @click="nextCountry" 
+            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            aria-label="次の国へ"
+          >
             {{ t.study.next }}
           </button>
         </div>
