@@ -15,13 +15,8 @@ app.mount('#app');
 // Service Worker登録
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js', { scope: '/' }).then(
-      (registration) => {
-        console.log('Service Worker registered:', registration);
-      },
-      (error) => {
-        console.log('Service Worker registration failed:', error);
-      }
-    );
+    navigator.serviceWorker.register('/sw.js', { scope: '/' }).catch(() => {
+      // Service Worker registration failed silently
+    });
   });
 }

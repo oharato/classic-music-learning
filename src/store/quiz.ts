@@ -36,7 +36,6 @@ export const useQuizStore = defineStore('quiz', {
     generateQuestions() {
       const countriesStore = useCountriesStore();
       if (countriesStore.countries.length === 0) {
-        console.error('Country data is not loaded.');
         return;
       }
 
@@ -72,12 +71,6 @@ export const useQuizStore = defineStore('quiz', {
         this.numberOfQuestions >= 999
           ? filteredCountries.length
           : Math.min(this.numberOfQuestions, filteredCountries.length);
-
-      if (filteredCountries.length < this.numberOfQuestions && this.numberOfQuestions < 999) {
-        console.warn(
-          `Not enough countries in ${this.quizRegion} for ${this.numberOfQuestions} questions. Using all available countries (${filteredCountries.length}).`
-        );
-      }
 
       // フィルタリングされた国からランダムに問題数分を選択
       const selectedCountriesForQuiz = [...filteredCountries]
@@ -115,7 +108,6 @@ export const useQuizStore = defineStore('quiz', {
     answerQuestion(selectedCountryId: string) {
       const currentQuestion = this.questions[this.currentQuestionIndex];
       if (!currentQuestion) {
-        console.error('No current question available');
         return;
       }
 

@@ -11,7 +11,11 @@ watch(selectedLanguage, (newLang) => {
 </script>
 
 <template>
-  <select v-model="selectedLanguage" class="p-2 border rounded">
+  <select 
+    v-model="selectedLanguage" 
+    class="p-2 border rounded"
+    aria-label="言語選択 / Language selection"
+  >
     <option value="ja">日本語</option>
     <option value="en">English</option>
   </select>

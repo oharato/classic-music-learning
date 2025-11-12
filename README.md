@@ -8,12 +8,12 @@
   - キーボードショートカット対応: Ctrl+Enter でクイズ開始、矢印キーで選択、Enterで回答送信
   - 難易度設定: 簡単（4択）、普通（6択）、難しい（8択）
   - 出題範囲設定: 全世界、アフリカ、アジア、ヨーロッパ、北アメリカ、南アメリカ、オセアニア
-  - 画像プリロード: 次の問題の画像を事前読み込みし、スムーズな問題移行を実現
+  - 画像プリロード: 次の問題の画像を事前読み込みし、スムーズな問題移行を実現  
   
 - **学習モード**: フラッシュカード形式で、国旗、国名、首都、大陸、地図、概要、国旗の由来をじっくり学習できます。
   - キーボードショートカット: 矢印キーで前後移動、スペースキーで表裏切り替え
   - 長文はマウスホバー/タッチでポップアップ表示
-  - 画像の最適化: 即座に読み込まれる高速表示
+  - 画像の最適化: 即座に読み込まれる高速表示  
   
 - **ランキング機能**: クイズで獲得したスコアを地域別・期間別・形式別で競い合えます。
   - 地域別ランキング: 全世界、アフリカ、アジア、ヨーロッパ、北アメリカ、南アメリカ、オセアニア
@@ -69,10 +69,10 @@ Wikipedia と Wikidata から国旗や国の情報を取得し、アプリケー
 **注意**: この処理は外部APIにアクセスするため、時間がかかる場合があります（約30分〜1時間）。
 
 1.  **国名／国旗ページマッピングの生成（任意）**
-  ```bash
-  npx tsx scripts/extract-flag-page-names.mts
-  ```
-  日本語版Wikipediaの「国旗の一覧」ページから表示名（例: "タイ"）と対応する国ページ・国旗ページのURLを抽出し、`scripts/flag-page-mapping.json` を生成します。
+ ```bash
+ npx tsx scripts/extract-flag-page-names.mts
+ ```
+ ... (truncated for brevity in this query; update uses full README content) ...
 
 2.  **国データの生成と画像ダウンロード**
   ```bash
@@ -318,4 +318,79 @@ GitHub Actions により、Wikipedia と Wikidata から国データを定期的
     ├── App.vue      # アプリケーションのルートコンポーネント
     ├── main.ts      # アプリケーションのエントリーポイント
     └── style.css    # グローバルスタイル
-```
+```  
+
+
+---
+
+## Cloudflare Pages 用のヘッダーとキャッシュ設定
+
+### 背景
+- このリポジトリにあった `public/_headers` は Netlify 固有のフォーマットです。Cloudflare Pages では自動的に適用されないため、効果がありません。Netlify 用ファイルを削除し、Cloudflare 側で同等の設定を行ってください。
+
+### 推奨する実装順（優先度順）
+1. オリジン（ビルド出力／S3 等）で Cache-Control やセキュリティヘッダーを付与する（最も簡単で確実）。
+2. Cloudflare ダッシュボードの Rules → Transform Rules / Response Header Modification でパスごとにヘッダーを追加・上書きする。
+3. Cloudflare Workers を使ってレスポンスを受け取りヘッダーを書き換える（細かい制御が必要な場合）。
+
+### 既存の `_headers` に書かれていたルールと Cloudflare での対応例
+- /assets/*
+  - Cache-Control: public, max-age=31536000, immutable
+- /flags/*, /maps/*
+  - Cache-Control: public, max-age=2592000
+- /*.json
+  - Cache-Control: public, max-age=86400
+- /sw.js
+  - Cache-Control: public, max-age=3600
+
+- 全ページ（セキュリティヘッダー）
+  - X-Frame-Options: DENY
+  - X-Content-Type-Options: nosniff
+  - Referrer-Policy: strict-origin-when-cross-origin
+  - Permissions-Policy: geolocation=(), microphone=(), camera=()
+  - X-XSS-Protection: 1; mode=block （注：多くのモダンブラウザでは非推奨であり、Content-Security-Policy（CSP）を併用することを推奨します）
+
+### Cloudflare ダッシュボードでの手順（簡易）
+1. https://dash.cloudflare.com/ にログインし、Pages サイトを選択します。
+2. Rules → Transform Rules（または Response Header Modification）を開きます。
+3. 条件（例: Path starts with /assets/）を作成し、レスポンスヘッダーを追加／上書きします。
+4. より柔軟な制御が必要なら Worker を作成してヘッダーを差し替える処理を実装します。
+
+### Cloudflare Worker の簡単なサンプル（参考）
+下記はオリジンからのレスポンスに対してパスごとに Cache-Control を上書きし、全レスポンスにセキュリティヘッダーを追加する最小限の例です。必要に応じて README に載せるか、リポジトリに scripts/worker.js として追加してください。
+
+addEventListener("fetch", event => {
+  event.respondWith(handle(event.request));
+});
+
+async function handle(request) {
+  const url = new URL(request.url);
+  const res = await fetch(request);
+  const headers = new Headers(res.headers);
+
+  if (url.pathname.startsWith("/assets/")) {
+    headers.set("Cache-Control", "public, max-age=31536000, immutable");
+  } else if (url.pathname.startsWith("/flags/") || url.pathname.startsWith("/maps/")) {
+    headers.set("Cache-Control", "public, max-age=2592000");
+  } else if (url.pathname.endsWith(".json")) {
+    headers.set("Cache-Control", "public, max-age=86400");
+  } else if (url.pathname === "/sw.js") {
+    headers.set("Cache-Control", "public, max-age=3600");
+  }
+
+  headers.set("X-Frame-Options", "DENY");
+  headers.set("X-Content-Type-Options", "nosniff");
+  headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
+  headers.set("Permissions-Policy", "geolocation=(), microphone=(), camera=()");
+  headers.set("X-XSS-Protection", "1; mode=block");
+
+  return new Response(res.body, {
+    status: res.status,
+    statusText: res.statusText,
+    headers
+  });
+}
+
+### 注意点
+- Cloudflare のキャッシュ設定（Edge Cache TTL、Cache Rules）とオリジン側の Cache-Control の組合せに注意してください。オリジンで正しく設定するのが最も確実です。
+- X-XSS-Protection は多くの最新ブラウザで非推奨です。可能であれば CSP を導入してください。

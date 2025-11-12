@@ -10,19 +10,30 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'flags/**/*.svg', 'flags/**/*.png', 'maps/**/*.png'],
       manifest: {
-        name: '国旗学習アプリ',
+        name: '国旗学習アプリ - World Flags Learning',
         short_name: '国旗学習',
-        description: '世界の国旗を楽しく学べるクイズアプリ',
+        description: '198カ国の国旗を楽しく学べるクイズアプリ。学習モードとクイズモードで世界の国旗をマスターしよう。',
         theme_color: '#4f46e5',
         background_color: '#ffffff',
         display: 'standalone',
+        start_url: '/',
+        scope: '/',
+        lang: 'ja',
+        orientation: 'any',
         icons: [
+          {
+            src: '/favicon.svg',
+            sizes: 'any',
+            type: 'image/svg+xml',
+            purpose: 'any maskable',
+          },
           {
             src: '/favicon.ico',
             sizes: '64x64 32x32 24x24 16x16',
             type: 'image/x-icon',
           },
         ],
+        categories: ['education', 'games'],
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,ico,png,svg,json}'],
