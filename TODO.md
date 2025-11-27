@@ -1,219 +1,110 @@
-# TODOリスト - 国旗学習アプリ
+# TODOリスト - クラシック音楽学習アプリ
 
 - 他から更新されることがあるので毎回読み込みしなおすこと
 
-## フェーズ1: プロジェクトセットアップ
+## フェーズ1: 国旗アプリからの変換 (完了)
 
-- [x] 1.1. Vue + Hono プロジェクトの初期化 (Viteを使用)
-- [x] 1.2. ディレクトリ構造の整備 (設計書に基づく)
-- [x] 1.3. 必要なライブラリのインストール (Vue, Hono, Pinia, Tailwind CSS, wikijs など)
-- [x] 1.4. Cloudflare Pages/D1 のローカル開発環境設定 (wrangler)
-    - [x] `wrangler.toml` の作成
+- [x] 1.1. データモデルの変更
+    - [x] Country型 → MusicPiece型への変換
+    - [x] id, title, composer, genre, audio_url, description, trivia フィールドの定義
+- [x] 1.2. ストアの更新
+    - [x] useCountriesStore → useMusicStore への変換
+    - [x] fetchCountries → fetchPieces への変更
+    - [x] getCountryById → getPieceById への変更
+    - [x] getRandomCountries → getRandomPieces への変更
+- [x] 1.3. 翻訳の更新
+    - [x] region → category（作曲家カテゴリ）への変更
+    - [x] 国旗関連用語 → 音楽関連用語への変更
+    - [x] クイズ形式の変更（flag-to-name → audio-to-title, name-to-flag → title-to-composer）
 
-## フェーズ2: データ準備
+## フェーズ2: コンポーネントの変換 (完了)
 
-- [x] 2.1. 国データ取得バッチスクリプトの実装 (`scripts/generate-data.mts` with `wikijs`)
-- [x] 2.2. バッチ処理を実行し、`public/countries.ja.json` および `public/countries.en.json` を生成する
+- [x] 2.1. FlagCard → MusicCard
+    - [x] 国旗画像 → 音声プレーヤーへの変更
+    - [x] 再生/一時停止ボタンの実装
+- [x] 2.2. CountryDetailCard → MusicDetailCard
+    - [x] 国情報 → 楽曲情報への変更
+    - [x] 曲名、作曲家、ジャンル、解説、トリビアの表示
+- [x] 2.3. RegionSelector → CategorySelector
+    - [x] 大陸選択 → 作曲家選択への変更
+    - [x] 利用可能な作曲家の動的生成
 
-## フェーズ3: フロントエンド実装
+## フェーズ3: ビューの更新 (完了)
 
-- [x] 3.1. 画面コンポーネントの雛形作成 (全画面分)
-- [x] 3.2. Vue Router の設定
-- [x] 3.3. Tailwind CSS の設定
-- [x] 3.4. 学習モード画面の実装 (フラッシュカード機能)
-- [x] 3.5. クイズ設定画面の実装
-- [x] 3.6. クイズ画面の実装 (クイズロジック)
-- [x] 3.7. 結果画面の実装
+- [x] 3.1. Home.vue
+    - [x] タイトルの変更（国旗学習ゲーム → クラシック音楽学習ゲーム）
+- [x] 3.2. Study.vue
+    - [x] 国旗フラッシュカード → 音楽フラッシュカードへの変更
+    - [x] 地域フィルター → 作曲家フィルターへの変更
+    - [x] クイズモード選択の追加（曲→曲名、曲名→作曲家）
+- [x] 3.3. QuizSetup.vue
+    - [x] 出題範囲の変更（大陸 → 作曲家）
+    - [x] クイズ形式の変更
+- [x] 3.4. QuizPlay.vue
+    - [x] 国旗表示 → 音声プレーヤーへの変更
+    - [x] 選択肢表示の変更（国名 → 曲名/作曲家）
+- [x] 3.5. QuizResult.vue
+    - [x] 結果表示の変更
+    - [x] 回答詳細の変更
+- [x] 3.6. Ranking.vue
+    - [x] 地域選択 → カテゴリ選択への変更
 
-## フェーズ4: バックエンド実装
+## フェーズ4: データ準備 (完了)
 
-- [x] 4.1. Hono API の雛形作成
-- [x] 4.2. Cloudflare D1 との接続設定
-- [x] 4.3. ランキング取得API (`GET /api/ranking`) の実装
-- [x] 4.4. スコア登録API (`POST /api/ranking`) の実装
+- [x] 4.1. サンプル楽曲データの作成
+    - [x] music.ja.json（日本語版）
+    - [x] music.en.json（英語版）
+- [x] 4.2. Wikimedia Commons音源のURL取得
+    - [x] ベートーヴェン: 交響曲第5番、エリーゼのために、月光ソナタ
+    - [x] モーツァルト: アイネ・クライネ・ナハトムジーク、交響曲第40番、トルコ行進曲
+    - [x] バッハ: トッカータとフーガ、G線上のアリア
+    - [x] ショパン: ノクターン第2番、小犬のワルツ
+    - [x] チャイコフスキー: 白鳥の湖、くるみ割り人形
+    - [x] ヴィヴァルディ: 四季「春」
+    - [x] ブラームス: ハンガリー舞曲第5番
+    - [x] パッヘルベル: カノン
 
-## フェーズ5: 統合と仕上げ
+## フェーズ5: テストの更新 (完了)
 
-- [x] 5.1. フロントエンドからランキングAPIを呼び出す処理を実装
-- [x] 5.2. ランキング画面の実装
-- [x] 5.3. 全体のスタイリング調整 (レスポンシブ対応)
-- [x] 5.4. デプロイ準備と動作確認
+- [x] 5.1. フィクスチャの更新
+    - [x] mockCountries → mockMusicPieces
+- [x] 5.2. ストアテストの更新
+    - [x] countries.test.ts
+    - [x] quiz.test.ts
+    - [x] ranking.test.ts
+- [x] 5.3. ビューテストの更新
+    - [x] Home.test.ts
+    - [x] QuizSetup.test.ts
+    - [x] Study.test.ts
+    - [x] Ranking.test.ts
 
-## 改善
-- [x] 画像ファイルをダウンロードしておき、ローカルから配信する
-- [x] countries.ja.json, countries.en.json に分割して多言語対応を実装
-- [x] 国旗がある国すべてを拡充（198カ国）
-- [x] public/flags 下の画像を適切にダウンロードして保存
-- [x] continent, map_image_url, descriptionが空なので適切な情報取得元を探す
-    - [x] continent: Wikidata API (P30 property)から取得
-    - [x] map_image_url: infoboxのHTMLから地図画像を抽出
-    - [x] description: 専用の国旗ページ（"Flag of [Country]"または"[国名]の国旗"）から取得
-    - [x] 各国の処理ごとにファイルに保存し、中断しても進捗を保持
-- [x] webアプリの学習モード、クイズが３か国しか対応していない。デフォルトでは日本語版の内容にしてほしい。英語版に切り替える機能が欲しい
-- [x] continent (大陸情報) の表示
-- [x] map_image_url (地図画像URL) の表示
-    - [x] 地図が大きいので小さめにカードの右上に表示
-- [x] エラーハンドリングとユーザーフィードバックの強化
-- [x] クイズの出題範囲の拡張
-- [x] クイズの難易度設定
-- [x] 学習モードの裏を見ているときに次へを押したときに表に戻らないようにする。矢印キーで前へ、次へ。スペースキーで表と裏の切り替え。
-- [x] 学習モードの裏はスクロールしないようにして。概要と国旗の由来はカードに収まるように切って、マウスホバーかタッチで詳細がポップアップするようにして。
-- [x] クイズの出題範囲に全世界が２つある
-- [x] クイズのフィードバックは１問ごとにせずに、クイズ結果で国旗（縮小表示）、選択したもの、正解のものを一覧で表示して。
-- [x] 地域別ランキング機能の実装（全世界、アフリカ、アジア、ヨーロッパ、北アメリカ、南アメリカ、オセアニア）
-- [x] 日次ランキングと全期間トップ5の分離
-- [x] ランキング画面のトップ3にメダル表示
-- [x] クイズ設定画面にCtrl+Enterでクイズ開始のキーボードショートカット
-- [x] クイズ画面に矢印キーでの選択肢移動とEnterで回答送信のキーボードショートカット
-- [x] ニックネームのlocalStorageへの保存と自動読み込み
-- [x] 国旗に灰色の背景を追加して視認性向上
-- [x] クイズ結果画面のラベルを等幅フォントで右寄せして整列
-- [x] faviconに日本の国旗デザインを追加
-- [x] データ生成スクリプトで首都情報をWikidata P36から取得（言語別ラベル対応）
-- [x] データ生成スクリプトで大陸情報をWikidata P30から取得（言語別ラベル対応）
-- [x] データベーススキーマの改善（ranking_daily, ranking_all_time テーブル）
-- [x] APIエンドポイントに region と type パラメータを追加
-- [x] ローカル開発環境のD1データベースマイグレーション
-- [x] クイズ画面でマウスホバー時に青い枠（選択状態）を移動
-- [x] 形式別ランキング機能の実装（国旗→国名、国名→国旗で別ランキング）
-- [x] データベーススキーマに format 列を追加（ranking_daily, ranking_all_time）
-- [x] APIエンドポイントに format パラメータを追加
-- [x] ランキング画面にクイズ形式選択セレクトボックスを追加
-- [x] GitHub CLI (gh) のインストールと認証設定
-- [x] GitHub Actions デプロイワークフローのトラブルシューティング
-- [x] データベーススキーマの変更（UNIQUE制約削除）
-    - [x] ranking_daily テーブルから UNIQUE 制約を削除（各挑戦ごとに記録可能に）
-    - [x] マイグレーションファイル 0001_remove_unique_constraint.sql の作成
-    - [x] API の ON CONFLICT 句を削除（単純な INSERT に変更）
-    - [x] ローカル環境でのマイグレーション適用
-- [x] GitHub Actions への自動マイグレーション追加
-    - [x] deploy.yml に D1 マイグレーション実行ステップを追加
-    - [x] Cloudflare Account ID の確認と設定
-- [x] 学習モードのUI改善
-    - [x] 国名→国旗モードで国名リストを表示（従来は国旗のみ）
-    - [x] クイズ形式に応じたグリッドレイアウトの最適化
-    - [x] 選択項目の強調表示でボックスサイズが変わらないように修正（border-4で統一）
-- [x] クイズ結果画面のレイアウト改善
-    - [x] スマホ版で「正解数：」「タイム：」「スコア：」のコロンを縦に揃える
-    - [x] PC版でも同様にコロンを揃える（固定幅 w-32 使用）
-- [x] ランキング画面のスコア表示改善
-    - [x] PC版テーブル表示でスコア列を右揃えに変更
-    - [x] スマホ版カード表示でスコアを右揃えに調整
-- [x] クイズ画面のスマホ版UI改善
-    - [x] デフォルトの強調表示を無効化（PC版のみキーボード操作で強調）
-    - [x] タップした選択肢を一瞬（200ms）だけ強調表示してから次の問題へ遷移
-    - [x] タッチイベント対応の追加
-- [x] 学習モードのカードのチラツキ修正
-    - [x] 国旗→国名モードで裏を見ているときに次へをクリックすると一瞬現在の国旗が見える問題を修正
-    - [x] インデックス変更とカードフリップの順序を変更（インデックス変更→カードフリップ）
+## フェーズ6: ドキュメント更新 (完了)
 
-## フェーズ6: テストと品質保証
+- [x] 6.1. README.md
+- [x] 6.2. docs/01_requirements.md
+- [x] 6.3. docs/02_basic_design.md
+- [x] 6.4. index.html（メタ情報）
+- [x] 6.5. favicon.svg
 
-- [x] 6.1. テスト環境のセットアップ (Vitest, @vue/test-utils, happy-dom)
-- [x] 6.2. ストアのユニットテスト実装
-    - [x] Countries Store テスト (14テスト)
-    - [x] Quiz Store テスト (11テスト)
-    - [x] Ranking Store テスト (7テスト)
-- [x] 6.3. バリデーション関数のテスト (16テスト)
-- [x] 6.4. APIロジックのテスト (10テスト)
-- [x] 6.5. Vueコンポーネントのテスト
-    - [x] Home コンポーネントテスト (8テスト)
-    - [x] QuizSetup コンポーネントテスト (14テスト)
-    - [x] Study コンポーネントテスト (15テスト)
-- [x] 6.6. 型安全性の強化
-    - [x] Cloudflare Workers型定義の導入 (@cloudflare/workers-types)
-    - [x] D1Database型エラーの解決
-    - [x] wikijs型定義の追加
-    - [x] quiz.ts型エラーの修正（null安全性）
-    - [x] 'props' is declared but its value is never read. の解消
-- [x] 6.7. コードリファクタリング
-    - [x] 不要なコメントの削除
-    - [x] 共通モックデータの抽出 (src/__tests__/fixtures/countries.ts)
-    - [x] テスト設定の最適化
-- [x] 6.8. テストカバレッジの確認 (95テスト、100%合格率達成)
+## フェーズ7: ビルドと検証 (完了)
 
-## フェーズ7: デプロイと運用
-
-- [x] 7.1. 本番環境の準備
-    - [x] Cloudflare アカウントへのログイン
-    - [x] D1 データベースの作成
-    - [x] データベースマイグレーションの適用
-    - [x] マイグレーションファイルの統合（0000_initial_schema.sql）
-- [x] 7.2. Cloudflare Pages へのデプロイ
-    - [x] ビルドスクリプトの設定
-    - [x] デプロイコマンドの追加（npm run deploy）
-    - [x] 本番環境への初回デプロイ
-- [x] 7.3. D1 バインディングの設定
-    - [x] Cloudflare ダッシュボードでの設定
-    - [x] 動作確認
-- [x] 7.4. UI/UX の改善
-    - [x] クイズ画面での画像読み込み待機機能の実装
-    - [x] ローディングスピナーの追加
-    - [x] 画像読み込み中の選択肢無効化
-    - [x] 画像のプリロード機能（次の問題を事前読み込み）
-    - [x] 画像の優先読み込み設定（loading="eager", fetchpriority="high"）
-    - [x] Vite ビルド最適化（画像キャッシュ効率化）
-- [x] 7.5. デプロイドキュメントの整備
-    - [x] README.md にデプロイ手順を追加
-    - [x] docs/07_deployment.md の作成
-    - [x] tech_blog.md にデプロイ経験を記録
-- [x] 7.6. CI/CD パイプラインの構築
-    - [x] GitHub Actions ワークフローの作成
-    - [x] 自動デプロイの設定（main/master ブランチ）
-    - [x] Cloudflare API トークンの秘匿化
-    - [x] docs/08_github_actions.md の作成
-    - [x] README.md に自動デプロイ手順を追加
-    - [x] wrangler pages deploy コマンドへの移行（非推奨警告の解消）
-- [x] 7.7. ドキュメントの更新
-    - [x] 04_api_spec.md: スコア登録APIに region と format パラメータを追加
-    - [x] 05_technical_specification.md: データベーススキーマとマイグレーション管理の更新
-    - [x] 08_github_actions.md: D1マイグレーション自動実行の追加、トラブルシューティング拡充
-
-## フェーズ8: データ生成の自動化
-
-- [x] 8.1. GitHub Actions ワークフローの作成
-    - [x] update-data.yml の作成
-    - [x] 手動実行（workflow_dispatch）のサポート
-    - [x] スケジュール実行（毎週日曜日）の設定
-    - [x] generate-data.mts の自動実行
-    - [x] public/ ディレクトリの変更を自動コミット
-    - [x] コミットメッセージ形式: "update by gha on {datetime}"
-    - [x] 自動デプロイの統合
-    - [x] update-data.yml に git pull ステップを追加（generate-data実行前）
-    - [x] generate-data.mts に countries.ja.json のソート処理を追加（flag-page-mapping.json のキー順に揃える）
-    - [x] generate-data.mts に countries.en.json のソート処理を追加（countries.ja.json の id 順に揃える）
+- [x] 7.1. npm run build の成功確認
+- [x] 7.2. npm run test:run の成功確認（132テスト全て成功）
+- [ ] 7.3. UIの動作確認（開発サーバーでの検証）
 
 ## 今後の改善候補
 
-- [x] パフォーマンス最適化
-    - [x] 画像の遅延読み込み（Intersection Observer API）
-    - [x] Service Worker によるオフライン対応
-- [x] 多言語対応の改善
-    - [x] 学習モードの首都、大陸、国旗の由来を英語版でも正しく表示
-    - [x] 英語版の国旗の由来情報取得バッチの改善
-        - [x] 国名の正規化機能（"the", "Republic of" などの除去）
-        - [x] 複数のページ名バリエーションを試行
-        - [x] HTML抽出からのリンク・注釈の除去
-- [x] Lighthouse最適化（満点対応）
-    - [x] SEO対策（meta description, keywords, Open Graph, Twitter Card, canonical URL）
-    - [x] robots.txt と sitemap.xml の作成
-    - [x] PWAマニフェストの最適化
-    - [x] キャッシュヘッダーの最適化（_headers ファイル）
-    - [x] セキュリティヘッダーの追加
-    - [x] アクセシビリティの改善（aria-label追加）
-    - [x] コンソールログの削除（本番環境向け）
+- [ ] 楽曲データの拡充
+    - [ ] Open Opus APIからの楽曲メタデータ取得スクリプトの作成
+    - [ ] Wikidata SPARQLクエリによる音源URL一括取得
+    - [ ] 楽曲数の拡大（現在15曲 → 50曲以上）
+- [ ] 音質改善
+    - [ ] Musopenからの高音質音源のダウンロードと統合
+    - [ ] 音質の悪い音源の差し替え
 - [ ] 機能拡張
-    - [ ] ユーザー登録・ログイン機能
-    - [ ] 学習進捗の記録・可視化
-    - [ ] ソーシャルシェア機能
-    - [ ] 音声読み上げ機能（国名の発音）
-- [ ] アクセシビリティのさらなる改善
-    - [ ] スクリーンリーダー対応の強化
-    - [x] カラーコントラストの最適化
-        - [x] ボタン背景色をWCAG 2.1 Level AA基準に適合（bg-blue-500→600, bg-green-500→700, bg-purple-500→700）
-    - [ ] フォーカス管理の改善
-- [ ] 多言語対応の拡充
-    - [ ] 中国語、韓国語、スペイン語などへの対応
-    - [ ] 言語別の国名読み仮名データの追加
-
-
+    - [ ] 作曲家別の学習進捗表示
+    - [ ] お気に入り機能
+    - [ ] 聴いた曲の履歴機能
+- [ ] パフォーマンス最適化
+    - [ ] 音声ファイルのプリロード
+    - [ ] Service Workerによる音声キャッシュ
