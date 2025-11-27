@@ -2,7 +2,7 @@ import { flushPromises, mount } from '@vue/test-utils';
 import { createPinia, setActivePinia } from 'pinia';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { createMemoryHistory, createRouter } from 'vue-router';
-import { mockMusicPieces } from '../../__tests__/fixtures/countries';
+import { mockMusicPieces } from '../../__tests__/fixtures/music';
 import { useMusicStore } from '../../store/countries';
 import { useQuizStore } from '../../store/quiz';
 import QuizSetup from '../QuizSetup.vue';

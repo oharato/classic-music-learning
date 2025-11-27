@@ -29,6 +29,3 @@ export const mockMusicPieces: MusicPiece[] = [
     trivia: 'オルガン曲についてのトリビア',
   },
 ];
-
-// 古い型名との互換性のため
-export const mockCountries = mockMusicPieces;
