@@ -4,7 +4,7 @@ import { useRoute, useRouter } from 'vue-router';
 import ErrorMessage from '../components/ErrorMessage.vue';
 import LoadingSpinner from '../components/LoadingSpinner.vue';
 import QuizFormatSelector from '../components/QuizFormatSelector.vue';
-import RegionSelector from '../components/RegionSelector.vue';
+import CategorySelector from '../components/RegionSelector.vue';
 import { useTranslation } from '../composables/useTranslation';
 import { type QuizFormat, type RankingType, useRankingStore } from '../store/ranking';
 import { formatDateTime } from '../utils/formatters';
@@ -15,14 +15,14 @@ const rankingStore = useRankingStore();
 const { t } = useTranslation();
 
 // URLパラメータから初期値を取得
-const selectedRegion = ref((route.query.region as string) || rankingStore.currentRegion || 'all');
+const selectedCategory = ref((route.query.region as string) || rankingStore.currentCategory || 'all');
 const selectedType = ref<RankingType>((route.query.type as RankingType) || rankingStore.currentType || 'daily');
 const selectedFormat = ref<QuizFormat>(
-  (route.query.format as QuizFormat) || rankingStore.currentFormat || 'flag-to-name'
+  (route.query.format as QuizFormat) || rankingStore.currentFormat || 'audio-to-title'
 );
 
 onMounted(() => {
-  rankingStore.fetchRanking(selectedRegion.value, selectedType.value, selectedFormat.value);
+  rankingStore.fetchRanking(selectedCategory.value, selectedType.value, selectedFormat.value);
 });
 
 // 画面を離れるときに自分のランク情報をクリアする
@@ -30,14 +30,14 @@ onUnmounted(() => {
   rankingStore.myRank = null;
 });
 
-// 地域、表示タイプ、形式が変わったらランキングを再取得してURLも更新
-watch([selectedRegion, selectedType, selectedFormat], () => {
-  rankingStore.fetchRanking(selectedRegion.value, selectedType.value, selectedFormat.value);
+// カテゴリ、表示タイプ、形式が変わったらランキングを再取得してURLも更新
+watch([selectedCategory, selectedType, selectedFormat], () => {
+  rankingStore.fetchRanking(selectedCategory.value, selectedType.value, selectedFormat.value);
 
   router.replace({
     path: '/ranking',
     query: {
-      region: selectedRegion.value,
+      region: selectedCategory.value,
       type: selectedType.value,
       format: selectedFormat.value,
     },
@@ -50,10 +50,10 @@ watch([selectedRegion, selectedType, selectedFormat], () => {
     <router-link to="/" class="text-blue-500 hover:underline">{{ t.common.backToHome }}</router-link>
     <h2 class="text-3xl font-bold my-6 text-center">{{ t.ranking.title }}</h2>
 
-    <!-- 地域選択、表示タイプ選択、形式選択 -->
+    <!-- カテゴリ選択、表示タイプ選択、形式選択 -->
     <div class="flex flex-col md:flex-row gap-2 md:gap-4 mb-6 bg-white p-3 md:p-4 rounded-lg shadow">
       <div class="flex-1">
-        <RegionSelector v-model="selectedRegion" :label="t.ranking.region" />
+        <CategorySelector v-model="selectedCategory" :label="t.ranking.category" />
       </div>
       <div class="flex-1">
         <label for="type" class="hidden md:block text-sm font-medium text-gray-700 mb-1">{{ t.ranking.display }}</label>

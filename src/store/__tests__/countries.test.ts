@@ -1,367 +1,324 @@
 import { createPinia, setActivePinia } from 'pinia';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { useCountriesStore } from '../countries';
+import { useMusicStore } from '../countries';
 
 globalThis.fetch = vi.fn() as any;
 
-describe('Countries Store', () => {
+describe('Music Store', () => {
   beforeEach(() => {
     setActivePinia(createPinia());
     vi.clearAllMocks();
   });
 
   it('初期状態が正しく設定されている', () => {
-    const store = useCountriesStore();
+    const store = useMusicStore();
 
-    expect(store.countries).toEqual([]);
+    expect(store.pieces).toEqual([]);
     expect(store.loading).toBe(false);
     expect(store.error).toBe(null);
     expect(store.currentLanguage).toBe('ja');
   });
 
-  it('fetchCountries で日本語の国データを正常に取得できる', async () => {
-    const mockCountries = [
+  it('fetchPieces で日本語の楽曲データを正常に取得できる', async () => {
+    const mockPieces = [
       {
-        id: 'jp',
-        name: '日本',
-        capital: '東京',
-        continent: 'アジア',
-        flag_image_url: '/flags/jp.svg',
-        map_image_url: '/maps/jp.svg',
+        id: 'symphony_5',
+        title: '交響曲第5番「運命」',
+        composer: 'ベートーヴェン',
+        genre: '交響曲',
+        audio_url: 'https://example.com/symphony5.ogg',
         description: '説明',
-        summary: '概要',
+        trivia: 'トリビア',
       },
       {
-        id: 'us',
-        name: 'アメリカ合衆国',
-        capital: 'ワシントンD.C.',
-        continent: '北アメリカ',
-        flag_image_url: '/flags/us.svg',
-        map_image_url: '/maps/us.svg',
+        id: 'nachtmusik',
+        title: 'アイネ・クライネ・ナハトムジーク',
+        composer: 'モーツァルト',
+        genre: 'セレナーデ',
+        audio_url: 'https://example.com/nachtmusik.ogg',
         description: '説明',
-        summary: '概要',
+        trivia: 'トリビア',
       },
     ];
 
     (globalThis.fetch as any).mockResolvedValueOnce({
       ok: true,
-      json: async () => mockCountries,
+      json: async () => mockPieces,
     });
 
-    const store = useCountriesStore();
-    await store.fetchCountries();
+    const store = useMusicStore();
+    await store.fetchPieces();
 
-    expect(store.countries).toEqual(mockCountries);
+    expect(store.pieces).toEqual(mockPieces);
     expect(store.loading).toBe(false);
     expect(store.error).toBe(null);
-    expect(globalThis.fetch).toHaveBeenCalledWith('/countries.ja.json');
+    expect(globalThis.fetch).toHaveBeenCalledWith('/music.ja.json');
   });
 
-  it('fetchCountries で英語の国データを正常に取得できる', async () => {
-    const mockCountries = [
+  it('fetchPieces で英語の楽曲データを正常に取得できる', async () => {
+    const mockPieces = [
       {
-        id: 'jp',
-        name: 'Japan',
-        capital: 'Tokyo',
-        continent: 'Asia',
-        flag_image_url: '/flags/jp.svg',
-        map_image_url: '/maps/jp.svg',
+        id: 'symphony_5',
+        title: 'Symphony No. 5',
+        composer: 'Beethoven',
+        genre: 'Symphony',
+        audio_url: 'https://example.com/symphony5.ogg',
         description: 'Description',
-        summary: 'Summary',
+        trivia: 'Trivia',
       },
     ];
 
     (globalThis.fetch as any).mockResolvedValueOnce({
       ok: true,
-      json: async () => mockCountries,
+      json: async () => mockPieces,
     });
 
-    const store = useCountriesStore();
+    const store = useMusicStore();
     store.currentLanguage = 'en';
-    await store.fetchCountries();
+    await store.fetchPieces();
 
-    expect(store.countries).toEqual(mockCountries);
-    expect(globalThis.fetch).toHaveBeenCalledWith('/countries.en.json');
+    expect(store.pieces).toEqual(mockPieces);
+    expect(globalThis.fetch).toHaveBeenCalledWith('/music.en.json');
   });
 
-  it('fetchCountries でエラーが発生した場合、エラーメッセージが設定される', async () => {
+  it('fetchPieces でエラーが発生した場合、エラーメッセージが設定される', async () => {
     (globalThis.fetch as any).mockResolvedValueOnce({
       ok: false,
     });
 
-    const store = useCountriesStore();
-    await store.fetchCountries();
+    const store = useMusicStore();
+    await store.fetchPieces();
 
-    expect(store.error).toBe('Failed to fetch countries data for ja');
+    expect(store.error).toBe('Failed to fetch music data for ja');
     expect(store.loading).toBe(false);
   });
 
-  it('fetchCountries でネットワークエラーが発生した場合、エラーメッセージが設定される', async () => {
+  it('fetchPieces でネットワークエラーが発生した場合、エラーメッセージが設定される', async () => {
     (globalThis.fetch as any).mockRejectedValueOnce(new Error('Network error'));
 
-    const store = useCountriesStore();
-    await store.fetchCountries();
+    const store = useMusicStore();
+    await store.fetchPieces();
 
     expect(store.error).toBe('Network error');
     expect(store.loading).toBe(false);
   });
 
   it('既にデータがある場合、forceReload=false では再取得しない', async () => {
-    const store = useCountriesStore();
-    store.countries = [
+    const store = useMusicStore();
+    store.pieces = [
       {
-        id: 'jp',
-        name: '日本',
-        capital: '東京',
-        continent: 'アジア',
-        flag_image_url: '/flags/jp.svg',
-        map_image_url: '/maps/jp.svg',
+        id: 'symphony_5',
+        title: '交響曲第5番「運命」',
+        composer: 'ベートーヴェン',
+        genre: '交響曲',
+        audio_url: 'https://example.com/symphony5.ogg',
         description: '説明',
-        summary: '概要',
+        trivia: 'トリビア',
       },
     ];
 
-    await store.fetchCountries(false);
+    await store.fetchPieces(false);
 
     expect(globalThis.fetch).not.toHaveBeenCalled();
   });
 
   it('forceReload=true の場合、既にデータがあっても再取得する', async () => {
-    const mockCountries = [
+    const mockPieces = [
       {
-        id: 'us',
-        name: 'アメリカ合衆国',
-        capital: 'ワシントンD.C.',
-        continent: '北アメリカ',
-        flag_image_url: '/flags/us.svg',
-        map_image_url: '/maps/us.svg',
+        id: 'nachtmusik',
+        title: 'アイネ・クライネ・ナハトムジーク',
+        composer: 'モーツァルト',
+        genre: 'セレナーデ',
+        audio_url: 'https://example.com/nachtmusik.ogg',
         description: '説明',
-        summary: '概要',
+        trivia: 'トリビア',
       },
     ];
 
     (globalThis.fetch as any).mockResolvedValueOnce({
       ok: true,
-      json: async () => mockCountries,
+      json: async () => mockPieces,
     });
 
-    const store = useCountriesStore();
-    store.countries = [
+    const store = useMusicStore();
+    store.pieces = [
       {
-        id: 'jp',
-        name: '日本',
-        capital: '東京',
-        continent: 'アジア',
-        flag_image_url: '/flags/jp.svg',
-        map_image_url: '/maps/jp.svg',
+        id: 'symphony_5',
+        title: '交響曲第5番「運命」',
+        composer: 'ベートーヴェン',
+        genre: '交響曲',
+        audio_url: 'https://example.com/symphony5.ogg',
         description: '説明',
-        summary: '概要',
+        trivia: 'トリビア',
       },
     ];
 
-    await store.fetchCountries(true);
+    await store.fetchPieces(true);
 
     expect(globalThis.fetch).toHaveBeenCalled();
-    expect(store.countries).toEqual(mockCountries);
+    expect(store.pieces).toEqual(mockPieces);
   });
 
   it('setLanguage で言語を変更すると、データが再取得される', async () => {
-    const mockCountries = [
+    const mockPieces = [
       {
-        id: 'jp',
-        name: 'Japan',
-        capital: 'Tokyo',
-        continent: 'Asia',
-        flag_image_url: '/flags/jp.svg',
-        map_image_url: '/maps/jp.svg',
+        id: 'symphony_5',
+        title: 'Symphony No. 5',
+        composer: 'Beethoven',
+        genre: 'Symphony',
+        audio_url: 'https://example.com/symphony5.ogg',
         description: 'Description',
-        summary: 'Summary',
+        trivia: 'Trivia',
       },
     ];
 
     (globalThis.fetch as any).mockResolvedValueOnce({
       ok: true,
-      json: async () => mockCountries,
+      json: async () => mockPieces,
     });
 
-    const store = useCountriesStore();
+    const store = useMusicStore();
     store.currentLanguage = 'ja';
     store.setLanguage('en');
 
     await vi.waitFor(() => {
       expect(store.currentLanguage).toBe('en');
-      expect(globalThis.fetch).toHaveBeenCalledWith('/countries.en.json');
+      expect(globalThis.fetch).toHaveBeenCalledWith('/music.en.json');
     });
   });
 
   it('setLanguage で同じ言語を設定しても再取得しない', async () => {
-    const store = useCountriesStore();
+    const store = useMusicStore();
     store.currentLanguage = 'ja';
     store.setLanguage('ja');
 
     expect(globalThis.fetch).not.toHaveBeenCalled();
   });
 
-  it('getCountryById で指定したIDの国を取得できる', () => {
-    const store = useCountriesStore();
-    store.countries = [
+  it('getPieceById で指定したIDの楽曲を取得できる', () => {
+    const store = useMusicStore();
+    store.pieces = [
       {
-        id: 'jp',
-        name: '日本',
-        capital: '東京',
-        continent: 'アジア',
-        flag_image_url: '/flags/jp.svg',
-        map_image_url: '/maps/jp.svg',
+        id: 'symphony_5',
+        title: '交響曲第5番「運命」',
+        composer: 'ベートーヴェン',
+        genre: '交響曲',
+        audio_url: 'https://example.com/symphony5.ogg',
         description: '説明',
-        summary: '概要',
+        trivia: 'トリビア',
       },
       {
-        id: 'us',
-        name: 'アメリカ合衆国',
-        capital: 'ワシントンD.C.',
-        continent: '北アメリカ',
-        flag_image_url: '/flags/us.svg',
-        map_image_url: '/maps/us.svg',
+        id: 'nachtmusik',
+        title: 'アイネ・クライネ・ナハトムジーク',
+        composer: 'モーツァルト',
+        genre: 'セレナーデ',
+        audio_url: 'https://example.com/nachtmusik.ogg',
         description: '説明',
-        summary: '概要',
+        trivia: 'トリビア',
       },
     ];
 
-    const country = store.getCountryById('jp');
-    expect(country?.name).toBe('日本');
+    const piece = store.getPieceById('symphony_5');
+    expect(piece?.title).toBe('交響曲第5番「運命」');
   });
 
-  it('getCountryById で存在しないIDを指定するとundefinedが返る', () => {
-    const store = useCountriesStore();
-    store.countries = [
+  it('getPieceById で存在しないIDを指定するとundefinedが返る', () => {
+    const store = useMusicStore();
+    store.pieces = [
       {
-        id: 'jp',
-        name: '日本',
-        capital: '東京',
-        continent: 'アジア',
-        flag_image_url: '/flags/jp.svg',
-        map_image_url: '/maps/jp.svg',
+        id: 'symphony_5',
+        title: '交響曲第5番「運命」',
+        composer: 'ベートーヴェン',
+        genre: '交響曲',
+        audio_url: 'https://example.com/symphony5.ogg',
         description: '説明',
-        summary: '概要',
+        trivia: 'トリビア',
       },
     ];
 
-    const country = store.getCountryById('invalid');
-    expect(country).toBeUndefined();
+    const piece = store.getPieceById('invalid');
+    expect(piece).toBeUndefined();
   });
 
-  it('getRandomCountries で指定した数のランダムな国を取得できる', () => {
-    const store = useCountriesStore();
-    store.countries = [
+  it('getRandomPieces で指定した数のランダムな楽曲を取得できる', () => {
+    const store = useMusicStore();
+    store.pieces = [
       {
-        id: 'jp',
-        name: '日本',
-        capital: '東京',
-        continent: 'アジア',
-        flag_image_url: '/flags/jp.svg',
-        map_image_url: '/maps/jp.svg',
+        id: 'symphony_5',
+        title: '交響曲第5番「運命」',
+        composer: 'ベートーヴェン',
+        genre: '交響曲',
+        audio_url: 'https://example.com/symphony5.ogg',
         description: '説明',
-        summary: '概要',
+        trivia: 'トリビア',
       },
       {
-        id: 'us',
-        name: 'アメリカ合衆国',
-        capital: 'ワシントンD.C.',
-        continent: '北アメリカ',
-        flag_image_url: '/flags/us.svg',
-        map_image_url: '/maps/us.svg',
+        id: 'nachtmusik',
+        title: 'アイネ・クライネ・ナハトムジーク',
+        composer: 'モーツァルト',
+        genre: 'セレナーデ',
+        audio_url: 'https://example.com/nachtmusik.ogg',
         description: '説明',
-        summary: '概要',
+        trivia: 'トリビア',
       },
       {
-        id: 'uk',
-        name: 'イギリス',
-        capital: 'ロンドン',
-        continent: 'ヨーロッパ',
-        flag_image_url: '/flags/uk.svg',
-        map_image_url: '/maps/uk.svg',
+        id: 'toccata',
+        title: 'トッカータとフーガ ニ短調',
+        composer: 'バッハ',
+        genre: 'オルガン曲',
+        audio_url: 'https://example.com/toccata.ogg',
         description: '説明',
-        summary: '概要',
+        trivia: 'トリビア',
       },
       {
-        id: 'fr',
-        name: 'フランス',
-        capital: 'パリ',
-        continent: 'ヨーロッパ',
-        flag_image_url: '/flags/fr.svg',
-        map_image_url: '/maps/fr.svg',
+        id: 'nocturne',
+        title: 'ノクターン第2番',
+        composer: 'ショパン',
+        genre: 'ノクターン',
+        audio_url: 'https://example.com/nocturne.ogg',
         description: '説明',
-        summary: '概要',
+        trivia: 'トリビア',
       },
     ];
 
-    const randomCountries = store.getRandomCountries(2);
-    expect(randomCountries.length).toBe(2);
+    const randomPieces = store.getRandomPieces(2);
+    expect(randomPieces.length).toBe(2);
   });
 
-  it('getRandomCountries で excludeId を指定すると、その国が除外される', () => {
-    const store = useCountriesStore();
-    store.countries = [
+  it('getRandomPieces で excludeId を指定すると、その楽曲が除外される', () => {
+    const store = useMusicStore();
+    store.pieces = [
       {
-        id: 'jp',
-        name: '日本',
-        capital: '東京',
-        continent: 'アジア',
-        flag_image_url: '/flags/jp.svg',
-        map_image_url: '/maps/jp.svg',
+        id: 'symphony_5',
+        title: '交響曲第5番「運命」',
+        composer: 'ベートーヴェン',
+        genre: '交響曲',
+        audio_url: 'https://example.com/symphony5.ogg',
         description: '説明',
-        summary: '概要',
+        trivia: 'トリビア',
       },
       {
-        id: 'us',
-        name: 'アメリカ合衆国',
-        capital: 'ワシントンD.C.',
-        continent: '北アメリカ',
-        flag_image_url: '/flags/us.svg',
-        map_image_url: '/maps/us.svg',
+        id: 'nachtmusik',
+        title: 'アイネ・クライネ・ナハトムジーク',
+        composer: 'モーツァルト',
+        genre: 'セレナーデ',
+        audio_url: 'https://example.com/nachtmusik.ogg',
         description: '説明',
-        summary: '概要',
+        trivia: 'トリビア',
       },
       {
-        id: 'uk',
-        name: 'イギリス',
-        capital: 'ロンドン',
-        continent: 'ヨーロッパ',
-        flag_image_url: '/flags/uk.svg',
-        map_image_url: '/maps/uk.svg',
+        id: 'toccata',
+        title: 'トッカータとフーガ ニ短調',
+        composer: 'バッハ',
+        genre: 'オルガン曲',
+        audio_url: 'https://example.com/toccata.ogg',
         description: '説明',
-        summary: '概要',
+        trivia: 'トリビア',
       },
     ];
 
-    const randomCountries = store.getRandomCountries(3, 'jp');
-    expect(randomCountries.every((c) => c.id !== 'jp')).toBe(true);
-    expect(randomCountries.length).toBe(2); // 除外後は2つ
-  });
-
-  it('複数の首都を持つ国のデータも正しく扱える', async () => {
-    const mockCountries = [
-      {
-        id: 'za',
-        name: '南アフリカ',
-        capital: ['プレトリア', 'ケープタウン', 'ブルームフォンテーン'],
-        continent: 'アフリカ',
-        flag_image_url: '/flags/za.svg',
-        map_image_url: '/maps/za.svg',
-        description: '説明',
-        summary: '概要',
-      },
-    ];
-
-    (globalThis.fetch as any).mockResolvedValueOnce({
-      ok: true,
-      json: async () => mockCountries,
-    });
-
-    const store = useCountriesStore();
-    await store.fetchCountries();
-
-    expect(store.countries.length).toBe(1);
-    expect(store.countries[0]!.capital).toEqual(['プレトリア', 'ケープタウン', 'ブルームフォンテーン']);
+    const randomPieces = store.getRandomPieces(3, 'symphony_5');
+    expect(randomPieces.every((p) => p.id !== 'symphony_5')).toBe(true);
+    expect(randomPieces.length).toBe(2); // 除外後は2つ
   });
 });

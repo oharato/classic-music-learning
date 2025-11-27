@@ -18,9 +18,9 @@ describe('Ranking Store', () => {
       expect(store.myRank).toBeNull();
       expect(store.loading).toBe(false);
       expect(store.error).toBeNull();
-      expect(store.currentRegion).toBe('all');
+      expect(store.currentCategory).toBe('all');
       expect(store.currentType).toBe('daily');
-      expect(store.currentFormat).toBe('flag-to-name');
+      expect(store.currentFormat).toBe('audio-to-title');
     });
   });
 
@@ -37,14 +37,14 @@ describe('Ranking Store', () => {
       });
 
       const store = useRankingStore();
-      await store.fetchRanking('all', 'daily', 'flag-to-name');
+      await store.fetchRanking('all', 'daily', 'audio-to-title');
 
       expect(store.ranking).toEqual(mockRanking);
       expect(store.loading).toBe(false);
       expect(store.error).toBeNull();
-      expect(store.currentRegion).toBe('all');
+      expect(store.currentCategory).toBe('all');
       expect(store.currentType).toBe('daily');
-      expect(store.currentFormat).toBe('flag-to-name');
+      expect(store.currentFormat).toBe('audio-to-title');
     });
 
     it('エラー時にエラーメッセージが設定される', async () => {
@@ -87,7 +87,7 @@ describe('Ranking Store', () => {
       });
 
       const store = useRankingStore();
-      await store.submitScore('TestPlayer', 9500, 'all', 'flag-to-name');
+      await store.submitScore('TestPlayer', 9500, 'all', 'audio-to-title');
 
       expect(store.myRank).toEqual(mockResponse.data);
       expect(store.loading).toBe(false);
@@ -101,7 +101,7 @@ describe('Ranking Store', () => {
       });
 
       const store = useRankingStore();
-      await store.submitScore('TestPlayer', 9500, 'Asia', 'name-to-flag');
+      await store.submitScore('TestPlayer', 9500, 'Beethoven', 'title-to-composer');
 
       expect(globalThis.fetch).toHaveBeenCalledWith('/api/ranking', {
         method: 'POST',
@@ -111,8 +111,8 @@ describe('Ranking Store', () => {
         body: JSON.stringify({
           nickname: 'TestPlayer',
           score: 9500,
-          region: 'Asia',
-          format: 'name-to-flag',
+          region: 'Beethoven',
+          format: 'title-to-composer',
         }),
       });
     });

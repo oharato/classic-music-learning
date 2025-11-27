@@ -1,0 +1,137 @@
+[
+  {
+    "id": "symphony_5_beethoven",
+    "title": "交響曲第5番「運命」",
+    "composer": "ベートーヴェン",
+    "genre": "交響曲",
+    "audio_url": "https://upload.wikimedia.org/wikipedia/commons/6/6f/Beethoven_Symphony_5_Mov1.ogg",
+    "description": "ベートーヴェンの交響曲第5番ハ短調作品67は、1807年から1808年にかけて作曲された。「運命」という通称で知られ、冒頭の「ダダダダーン」という動機は世界中で最も有名なクラシック音楽のフレーズの一つ。",
+    "trivia": "冒頭の4つの音は「運命がドアを叩く音」と表現されることがある。ベートーヴェン自身がこの動機について「運命はこのように戸を叩く」と語ったという逸話があるが、実際の発言かどうかは確認されていない。"
+  },
+  {
+    "id": "fur_elise",
+    "title": "エリーゼのために",
+    "composer": "ベートーヴェン",
+    "genre": "ピアノ曲",
+    "audio_url": "https://upload.wikimedia.org/wikipedia/commons/7/7a/Beethoven_-_Bagatelle_in_A_minor_%28F%C3%BCr_Elise%29.ogg",
+    "description": "「エリーゼのために」はベートーヴェンが1810年に作曲したピアノ曲。正式名称はバガテル第25番イ短調WoO 59。世界で最も有名なピアノ曲の一つ。",
+    "trivia": "この曲を捧げられた「エリーゼ」が誰なのかは長年の謎とされている。有力な説として、テレーゼ・マルファッティという女性への献呈で、「エリーゼ」は「テレーゼ」の誤読ではないかとされている。"
+  },
+  {
+    "id": "moonlight_sonata",
+    "title": "月光ソナタ",
+    "composer": "ベートーヴェン",
+    "genre": "ピアノソナタ",
+    "audio_url": "https://upload.wikimedia.org/wikipedia/commons/6/6b/Beethoven_opus_27_no_2_mvmt_1_Presto_agitato_-_Adagio_sostenuto.ogg",
+    "description": "ピアノソナタ第14番嬰ハ短調作品27-2は、1801年に作曲された。「月光ソナタ」という通称は、詩人レルシュタープが第1楽章を「スイスのルツェルン湖の月光に揺れる小舟のよう」と評したことに由来する。",
+    "trivia": "ベートーヴェン自身はこの曲を「幻想曲風ソナタ」と呼んでいた。「月光」という名前が付いたのは作曲者の死後のことである。"
+  },
+  {
+    "id": "eine_kleine_nachtmusik",
+    "title": "アイネ・クライネ・ナハトムジーク",
+    "composer": "モーツァルト",
+    "genre": "セレナーデ",
+    "audio_url": "https://upload.wikimedia.org/wikipedia/commons/a/a4/Mozart_-_Eine_kleine_Nachtmusik_-_1._Allegro.ogg",
+    "description": "セレナード第13番ト長調K.525「アイネ・クライネ・ナハトムジーク」は1787年に作曲された。ドイツ語で「小さな夜の曲」を意味し、モーツァルトの最も有名な作品の一つ。",
+    "trivia": "この曲は当初5楽章で構成されていたが、第2楽章が失われ、現在は4楽章で演奏される。なぜ失われたのかは謎のまま。"
+  },
+  {
+    "id": "symphony_40_mozart",
+    "title": "交響曲第40番",
+    "composer": "モーツァルト",
+    "genre": "交響曲",
+    "audio_url": "https://upload.wikimedia.org/wikipedia/commons/4/47/Mozart_-_Symphony_40_g-moll_-_1._Molto_allegro.ogg",
+    "description": "交響曲第40番ト短調K.550は1788年に作曲された。モーツァルトの交響曲の中でも特に人気が高く、短調で書かれた数少ない交響曲の一つ。",
+    "trivia": "モーツァルトがこの曲を作曲した1788年の夏には、わずか6週間で第39番、第40番、第41番の3つの交響曲を完成させた。これは音楽史上最も驚異的な創作期間の一つとされている。"
+  },
+  {
+    "id": "turkish_march",
+    "title": "トルコ行進曲",
+    "composer": "モーツァルト",
+    "genre": "ピアノソナタ",
+    "audio_url": "https://upload.wikimedia.org/wikipedia/commons/9/90/Mozart_-_Rondo_Alla_Turca_%28Piano_Sonata_No._11%2C_K._331%29.ogg",
+    "description": "ピアノソナタ第11番イ長調K.331の第3楽章「トルコ行進曲」は、当時のウィーンで流行していたトルコ風音楽（トルコ軍楽隊の音楽）をピアノで模倣した作品。",
+    "trivia": "18世紀のウィーンではオスマン帝国との戦争の影響でトルコ趣味が流行しており、多くの作曲家がトルコ風の音楽を書いた。この曲もその一つ。"
+  },
+  {
+    "id": "toccata_fugue_d_minor",
+    "title": "トッカータとフーガ ニ短調",
+    "composer": "バッハ",
+    "genre": "オルガン曲",
+    "audio_url": "https://upload.wikimedia.org/wikipedia/commons/b/b9/BWV565_Praeludium.ogg",
+    "description": "トッカータとフーガ ニ短調BWV565は、バッハの最も有名なオルガン曲。冒頭の劇的な下降音階は映画やテレビでも頻繁に使用される。",
+    "trivia": "この曲がバッハの真作かどうかについては議論がある。一部の音楽学者は、様式や構造から別の作曲家の作品ではないかと主張している。"
+  },
+  {
+    "id": "air_on_g_string",
+    "title": "G線上のアリア",
+    "composer": "バッハ",
+    "genre": "管弦楽組曲",
+    "audio_url": "https://upload.wikimedia.org/wikipedia/commons/9/9a/Bach_Air.ogg",
+    "description": "「G線上のアリア」は、バッハの管弦楽組曲第3番ニ長調BWV1068の第2楽章。アウグスト・ヴィルヘルミがヴァイオリン独奏用に編曲し、G線のみで演奏できることからこの名前が付いた。",
+    "trivia": "オリジナルはニ長調で書かれているが、ヴィルヘルミの編曲ではハ長調に移調され、ヴァイオリンの最低弦（G線）だけで演奏できるようになっている。"
+  },
+  {
+    "id": "nocturne_op9_no2",
+    "title": "ノクターン第2番",
+    "composer": "ショパン",
+    "genre": "ノクターン",
+    "audio_url": "https://upload.wikimedia.org/wikipedia/commons/e/e1/Frederic_Chopin_-_nocturne_op9_no2.ogg",
+    "description": "ノクターン第2番変ホ長調作品9-2は1830年から1831年にかけて作曲された。ショパンの最も有名なノクターンで、甘美なメロディが特徴。",
+    "trivia": "ショパンはこの曲を作曲した当時わずか20歳だった。「夜想曲」という形式を芸術的に高めたのはショパンの功績とされている。"
+  },
+  {
+    "id": "waltz_minute",
+    "title": "小犬のワルツ",
+    "composer": "ショパン",
+    "genre": "ワルツ",
+    "audio_url": "https://upload.wikimedia.org/wikipedia/commons/d/d4/Fr%C3%A9d%C3%A9ric_Chopin%2C_Valse_Op._64_No._1_%28%27Minute_Waltz%27%29.ogg",
+    "description": "ワルツ第6番変ニ長調作品64-1は「小犬のワルツ」または「1分間のワルツ」として知られる。ショパンの恋人ジョルジュ・サンドの愛犬が自分の尻尾を追いかける様子に着想を得たとされる。",
+    "trivia": "「1分間のワルツ」という別名は、曲の短さを誇張したもの。実際には演奏に1分30秒から2分程度かかる。"
+  },
+  {
+    "id": "swan_lake",
+    "title": "白鳥の湖",
+    "composer": "チャイコフスキー",
+    "genre": "バレエ音楽",
+    "audio_url": "https://upload.wikimedia.org/wikipedia/commons/e/ef/Tchaikovsky-Swan_Lake-Act_II-Scene_10_moderato.ogg",
+    "description": "「白鳥の湖」作品20は1875年から1876年にかけて作曲されたバレエ音楽。チャイコフスキーの3大バレエの一つで、世界で最も有名なバレエ作品。",
+    "trivia": "初演は失敗だったが、チャイコフスキーの死後に振付師プティパとイワーノフによる改訂版が大成功を収め、以後この版が定番となっている。"
+  },
+  {
+    "id": "nutcracker",
+    "title": "くるみ割り人形",
+    "composer": "チャイコフスキー",
+    "genre": "バレエ音楽",
+    "audio_url": "https://upload.wikimedia.org/wikipedia/commons/9/9f/Tchaikovsky_-_The_Nutcracker_-_March.ogg",
+    "description": "「くるみ割り人形」作品71は1892年に初演されたバレエ音楽。クリスマスシーズンに世界中で上演される人気作品で、「花のワルツ」や「こんぺい糖の踊り」などの名曲を含む。",
+    "trivia": "この作品にはチェレスタという楽器が使用されている。チャイコフスキーはこの新しい楽器をこの曲で初めて使用し、その神秘的な音色を効果的に活用した。"
+  },
+  {
+    "id": "four_seasons_spring",
+    "title": "四季「春」",
+    "composer": "ヴィヴァルディ",
+    "genre": "協奏曲",
+    "audio_url": "https://upload.wikimedia.org/wikipedia/commons/d/d0/Antonio_Vivaldi_-_The_Four_Seasons%2C_Spring_%28La_primavera%29_I._Allegro.ogg",
+    "description": "「四季」はヴィヴァルディが1723年頃に作曲したヴァイオリン協奏曲集。「春」はその第1曲で、鳥のさえずりや春の訪れを音楽で描写した描写音楽の傑作。",
+    "trivia": "「四季」の各曲にはソネット（詩）が付いており、音楽と詩が密接に関連している。これは当時としては革新的な試みだった。"
+  },
+  {
+    "id": "hungarian_dance_5",
+    "title": "ハンガリー舞曲第5番",
+    "composer": "ブラームス",
+    "genre": "舞曲",
+    "audio_url": "https://upload.wikimedia.org/wikipedia/commons/0/0a/Johannes_Brahms_-_Hungarian_Dance_No_5.ogg",
+    "description": "ハンガリー舞曲第5番嬰ヘ短調は、ブラームスの「ハンガリー舞曲集」の中で最も有名な曲。1869年に出版され、ハンガリーの民俗音楽に基づいている。",
+    "trivia": "ブラームスはこの曲を自作として発表したが、実際にはハンガリーの民謡に基づいており、後に著作権問題が発生した。"
+  },
+  {
+    "id": "canon_pachelbel",
+    "title": "カノン",
+    "composer": "パッヘルベル",
+    "genre": "室内楽曲",
+    "audio_url": "https://upload.wikimedia.org/wikipedia/commons/4/4c/Pachelbel%27s_Canon.ogg",
+    "description": "パッヘルベルのカノンは、ヨハン・パッヘルベルが1680年頃に作曲した室内楽曲。結婚式や卒業式でよく演奏され、ポピュラー音楽にも多大な影響を与えている。",
+    "trivia": "この曲のバス進行（カノン進行）は現代のポップミュージックでも非常に多く使用されており、「世界で最も使われているコード進行」とも呼ばれている。"
+  }
+]

@@ -1,0 +1,137 @@
+[
+  {
+    "id": "symphony_5_beethoven",
+    "title": "Symphony No. 5 'Fate'",
+    "composer": "Beethoven",
+    "genre": "Symphony",
+    "audio_url": "https://upload.wikimedia.org/wikipedia/commons/6/6f/Beethoven_Symphony_5_Mov1.ogg",
+    "description": "Beethoven's Symphony No. 5 in C minor, Op. 67, was composed between 1807 and 1808. Known as the 'Fate' symphony, the opening 'da-da-da-daaa' motif is one of the most famous phrases in classical music worldwide.",
+    "trivia": "The opening four notes are often described as 'fate knocking at the door.' While Beethoven allegedly said 'Thus fate knocks at the door' about this motif, whether he actually made this statement is unconfirmed."
+  },
+  {
+    "id": "fur_elise",
+    "title": "Für Elise",
+    "composer": "Beethoven",
+    "genre": "Piano piece",
+    "audio_url": "https://upload.wikimedia.org/wikipedia/commons/7/7a/Beethoven_-_Bagatelle_in_A_minor_%28F%C3%BCr_Elise%29.ogg",
+    "description": "Für Elise is a piano piece composed by Beethoven in 1810. Its official name is Bagatelle No. 25 in A minor, WoO 59. It is one of the most famous piano pieces in the world.",
+    "trivia": "The identity of 'Elise' to whom this piece was dedicated has been a mystery for years. A leading theory suggests it was dedicated to Therese Malfatti, and 'Elise' may be a misreading of 'Therese.'"
+  },
+  {
+    "id": "moonlight_sonata",
+    "title": "Moonlight Sonata",
+    "composer": "Beethoven",
+    "genre": "Piano Sonata",
+    "audio_url": "https://upload.wikimedia.org/wikipedia/commons/6/6b/Beethoven_opus_27_no_2_mvmt_1_Presto_agitato_-_Adagio_sostenuto.ogg",
+    "description": "Piano Sonata No. 14 in C-sharp minor, Op. 27, No. 2, was composed in 1801. The nickname 'Moonlight Sonata' comes from poet Rellstab's description of the first movement as 'like a small boat swaying in the moonlight on Lake Lucerne in Switzerland.'",
+    "trivia": "Beethoven himself called this piece 'Sonata quasi una fantasia' (Sonata in the manner of a fantasy). The name 'Moonlight' was given after the composer's death."
+  },
+  {
+    "id": "eine_kleine_nachtmusik",
+    "title": "Eine kleine Nachtmusik",
+    "composer": "Mozart",
+    "genre": "Serenade",
+    "audio_url": "https://upload.wikimedia.org/wikipedia/commons/a/a4/Mozart_-_Eine_kleine_Nachtmusik_-_1._Allegro.ogg",
+    "description": "Serenade No. 13 in G major, K. 525, 'Eine kleine Nachtmusik,' was composed in 1787. The title means 'A Little Night Music' in German and is one of Mozart's most famous works.",
+    "trivia": "The piece was originally composed in five movements, but the second movement was lost, and it is now performed in four movements. Why it was lost remains a mystery."
+  },
+  {
+    "id": "symphony_40_mozart",
+    "title": "Symphony No. 40",
+    "composer": "Mozart",
+    "genre": "Symphony",
+    "audio_url": "https://upload.wikimedia.org/wikipedia/commons/4/47/Mozart_-_Symphony_40_g-moll_-_1._Molto_allegro.ogg",
+    "description": "Symphony No. 40 in G minor, K. 550, was composed in 1788. It is one of Mozart's most popular symphonies and one of the few written in a minor key.",
+    "trivia": "In the summer of 1788, Mozart completed three symphonies—No. 39, No. 40, and No. 41—in just six weeks. This is considered one of the most remarkable creative periods in music history."
+  },
+  {
+    "id": "turkish_march",
+    "title": "Turkish March",
+    "composer": "Mozart",
+    "genre": "Piano Sonata",
+    "audio_url": "https://upload.wikimedia.org/wikipedia/commons/9/90/Mozart_-_Rondo_Alla_Turca_%28Piano_Sonata_No._11%2C_K._331%29.ogg",
+    "description": "The 'Turkish March' is the third movement of Piano Sonata No. 11 in A major, K. 331. It imitates Turkish military band music (Janissary music), which was fashionable in Vienna at the time.",
+    "trivia": "In 18th-century Vienna, Turkish themes were fashionable due to wars with the Ottoman Empire, and many composers wrote Turkish-style music. This piece is one such example."
+  },
+  {
+    "id": "toccata_fugue_d_minor",
+    "title": "Toccata and Fugue in D minor",
+    "composer": "Bach",
+    "genre": "Organ piece",
+    "audio_url": "https://upload.wikimedia.org/wikipedia/commons/b/b9/BWV565_Praeludium.ogg",
+    "description": "Toccata and Fugue in D minor, BWV 565, is Bach's most famous organ work. The dramatic opening descending scale is frequently used in movies and television.",
+    "trivia": "There is debate about whether this piece is truly by Bach. Some musicologists argue that its style and structure suggest it may be by another composer."
+  },
+  {
+    "id": "air_on_g_string",
+    "title": "Air on the G String",
+    "composer": "Bach",
+    "genre": "Orchestral Suite",
+    "audio_url": "https://upload.wikimedia.org/wikipedia/commons/9/9a/Bach_Air.ogg",
+    "description": "'Air on the G String' is the second movement of Bach's Orchestral Suite No. 3 in D major, BWV 1068. August Wilhelmj arranged it for solo violin, and it can be played entirely on the G string, hence the name.",
+    "trivia": "The original is in D major, but Wilhelmj's arrangement is transposed to C major so it can be played entirely on the violin's lowest string (G string)."
+  },
+  {
+    "id": "nocturne_op9_no2",
+    "title": "Nocturne No. 2",
+    "composer": "Chopin",
+    "genre": "Nocturne",
+    "audio_url": "https://upload.wikimedia.org/wikipedia/commons/e/e1/Frederic_Chopin_-_nocturne_op9_no2.ogg",
+    "description": "Nocturne No. 2 in E-flat major, Op. 9, No. 2, was composed between 1830 and 1831. It is Chopin's most famous nocturne, characterized by its sweet melody.",
+    "trivia": "Chopin was only 20 years old when he composed this piece. He is credited with elevating the nocturne form to an artistic level."
+  },
+  {
+    "id": "waltz_minute",
+    "title": "Minute Waltz",
+    "composer": "Chopin",
+    "genre": "Waltz",
+    "audio_url": "https://upload.wikimedia.org/wikipedia/commons/d/d4/Fr%C3%A9d%C3%A9ric_Chopin%2C_Valse_Op._64_No._1_%28%27Minute_Waltz%27%29.ogg",
+    "description": "Waltz No. 6 in D-flat major, Op. 64, No. 1, is known as the 'Minute Waltz' or 'Dog Waltz.' It was allegedly inspired by Chopin's lover George Sand's dog chasing its own tail.",
+    "trivia": "The nickname 'Minute Waltz' exaggerates the piece's brevity. In reality, it takes about 1 minute 30 seconds to 2 minutes to perform."
+  },
+  {
+    "id": "swan_lake",
+    "title": "Swan Lake",
+    "composer": "Tchaikovsky",
+    "genre": "Ballet music",
+    "audio_url": "https://upload.wikimedia.org/wikipedia/commons/e/ef/Tchaikovsky-Swan_Lake-Act_II-Scene_10_moderato.ogg",
+    "description": "'Swan Lake,' Op. 20, was composed between 1875 and 1876. It is one of Tchaikovsky's three great ballets and the world's most famous ballet.",
+    "trivia": "The premiere was a failure, but after Tchaikovsky's death, a revised version by choreographers Petipa and Ivanov became a great success and has remained the standard version."
+  },
+  {
+    "id": "nutcracker",
+    "title": "The Nutcracker",
+    "composer": "Tchaikovsky",
+    "genre": "Ballet music",
+    "audio_url": "https://upload.wikimedia.org/wikipedia/commons/9/9f/Tchaikovsky_-_The_Nutcracker_-_March.ogg",
+    "description": "'The Nutcracker,' Op. 71, premiered in 1892. It is a popular work performed worldwide during the Christmas season, featuring famous pieces like 'Waltz of the Flowers' and 'Dance of the Sugar Plum Fairy.'",
+    "trivia": "This work uses an instrument called the celesta. Tchaikovsky was one of the first to use this new instrument, effectively utilizing its mystical sound."
+  },
+  {
+    "id": "four_seasons_spring",
+    "title": "The Four Seasons: Spring",
+    "composer": "Vivaldi",
+    "genre": "Concerto",
+    "audio_url": "https://upload.wikimedia.org/wikipedia/commons/d/d0/Antonio_Vivaldi_-_The_Four_Seasons%2C_Spring_%28La_primavera%29_I._Allegro.ogg",
+    "description": "'The Four Seasons' is a set of violin concertos composed by Vivaldi around 1723. 'Spring' is the first piece, a masterpiece of program music depicting birdsong and the arrival of spring.",
+    "trivia": "Each piece in 'The Four Seasons' is accompanied by a sonnet, with music and poetry closely related. This was an innovative approach for its time."
+  },
+  {
+    "id": "hungarian_dance_5",
+    "title": "Hungarian Dance No. 5",
+    "composer": "Brahms",
+    "genre": "Dance",
+    "audio_url": "https://upload.wikimedia.org/wikipedia/commons/0/0a/Johannes_Brahms_-_Hungarian_Dance_No_5.ogg",
+    "description": "Hungarian Dance No. 5 in F-sharp minor is the most famous piece from Brahms's 'Hungarian Dances.' Published in 1869, it is based on Hungarian folk music.",
+    "trivia": "Brahms published this piece as his own composition, but it was actually based on Hungarian folk tunes, which later led to copyright issues."
+  },
+  {
+    "id": "canon_pachelbel",
+    "title": "Canon",
+    "composer": "Pachelbel",
+    "genre": "Chamber music",
+    "audio_url": "https://upload.wikimedia.org/wikipedia/commons/4/4c/Pachelbel%27s_Canon.ogg",
+    "description": "Pachelbel's Canon is a chamber music piece composed by Johann Pachelbel around 1680. It is often performed at weddings and graduations and has greatly influenced popular music.",
+    "trivia": "The bass progression of this piece (Canon progression) is extremely common in modern pop music and is sometimes called 'the most used chord progression in the world.'"
+  }
+]

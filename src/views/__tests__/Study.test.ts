@@ -2,8 +2,8 @@ import { flushPromises, mount } from '@vue/test-utils';
 import { createPinia, setActivePinia } from 'pinia';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { createMemoryHistory, createRouter } from 'vue-router';
-import { mockCountries } from '../../__tests__/fixtures/countries';
-import { useCountriesStore } from '../../store/countries';
+import { mockMusicPieces } from '../../__tests__/fixtures/countries';
+import { useMusicStore } from '../../store/countries';
 import Study from '../Study.vue';
 
 describe('Study.vue', () => {
@@ -20,10 +20,10 @@ describe('Study.vue', () => {
       ],
     });
 
-    const countriesStore = useCountriesStore();
-    countriesStore.countries = mockCountries;
-    countriesStore.loading = false; // ローディング状態を解除
-    countriesStore.currentLanguage = 'ja'; // 日本語を選択
+    const musicStore = useMusicStore();
+    musicStore.pieces = mockMusicPieces;
+    musicStore.loading = false; // ローディング状態を解除
+    musicStore.currentLanguage = 'ja'; // 日本語を選択
   });
 
   afterEach(() => {
@@ -40,17 +40,17 @@ describe('Study.vue', () => {
     expect(wrapper.find('h2').text()).toBe('学習モード');
   });
 
-  it('最初の国が表示される', () => {
+  it('最初の楽曲が表示される', () => {
     const wrapper = mount(Study, {
       global: {
         plugins: [router],
       },
     });
 
-    // 最初の国（日本）の国旗が表示される
-    const flagImage = wrapper.find('img[alt="日本の国旗"]');
-    expect(flagImage.exists()).toBe(true);
-    expect(flagImage.attributes('src')).toBe('/flags/jp.svg');
+    // 最初の楽曲の音符アイコンが表示される
+    expect(wrapper.text()).toContain('🎵');
+    // 再生ボタンが表示される
+    expect(wrapper.text()).toContain('再生');
   });
 
   it('カードをクリックするとフリップする', async () => {
@@ -72,7 +72,7 @@ describe('Study.vue', () => {
     expect((wrapper.vm as any).isFlipped).toBe(true);
   });
 
-  it('「次へ」ボタンで次の国に移動する', async () => {
+  it('「次へ」ボタンで次の楽曲に移動する', async () => {
     const wrapper = mount(Study, {
       global: {
         plugins: [router],
@@ -96,7 +96,7 @@ describe('Study.vue', () => {
     }
   });
 
-  it('「前へ」ボタンで前の国に移動する', async () => {
+  it('「前へ」ボタンで前の楽曲に移動する', async () => {
     const wrapper = mount(Study, {
       global: {
         plugins: [router],
@@ -124,7 +124,7 @@ describe('Study.vue', () => {
     }
   });
 
-  it('最後の国で「次へ」を押すと最初に戻る（ループ）', async () => {
+  it('最後の楽曲で「次へ」を押すと最初に戻る（ループ）', async () => {
     const wrapper = mount(Study, {
       global: {
         plugins: [router],
@@ -134,7 +134,7 @@ describe('Study.vue', () => {
     const nextButton = wrapper.findAll('button').find((btn) => btn.text().includes('次へ'));
 
     if (nextButton) {
-      // 3回「次へ」を押して最後の国の次へ
+      // 3回「次へ」を押して最後の楽曲の次へ
       await nextButton.trigger('click');
       await wrapper.vm.$nextTick();
       await nextButton.trigger('click');
@@ -147,7 +147,7 @@ describe('Study.vue', () => {
     }
   });
 
-  it('最初の国で「前へ」を押すと最後に移動する（ループ）', async () => {
+  it('最初の楽曲で「前へ」を押すと最後に移動する（ループ）', async () => {
     const wrapper = mount(Study, {
       global: {
         plugins: [router],
@@ -177,38 +177,38 @@ describe('Study.vue', () => {
     expect(wrapper.text()).toContain('1 / 3');
   });
 
-  it('地域選択ドロップダウンが表示される', () => {
+  it('カテゴリ選択ドロップダウンが表示される', () => {
     const wrapper = mount(Study, {
       global: {
         plugins: [router],
       },
     });
 
-    const select = wrapper.find('#studyRegion');
+    const select = wrapper.find('#studyCategory');
     expect(select.exists()).toBe(true);
 
     const options = select.findAll('option');
-    expect(options[0]?.text()).toBe('全世界');
+    expect(options[0]?.text()).toBe('すべて');
   });
 
-  it('地域を選択するとフィルタリングされる', async () => {
+  it('カテゴリを選択するとフィルタリングされる', async () => {
     const wrapper = mount(Study, {
       global: {
         plugins: [router],
       },
     });
 
-    const select = wrapper.find('#studyRegion');
-    await select.setValue('Asia');
+    const select = wrapper.find('#studyCategory');
+    await select.setValue('Beethoven');
     await wrapper.vm.$nextTick();
 
-    // フィルタリングされた国の数を確認
-    const filteredCountries = (wrapper.vm as any).filteredCountries;
-    expect(filteredCountries.length).toBe(1);
-    expect(filteredCountries[0].name).toBe('日本');
+    // フィルタリングされた楽曲の数を確認
+    const filteredPieces = (wrapper.vm as any).filteredPieces;
+    expect(filteredPieces.length).toBe(1);
+    expect(filteredPieces[0].title).toBe('交響曲第5番「運命」');
   });
 
-  it('地域を変更するとカードが表面に戻る', async () => {
+  it('カテゴリを変更するとカードが表面に戻る', async () => {
     const wrapper = mount(Study, {
       global: {
         plugins: [router],
@@ -223,9 +223,9 @@ describe('Study.vue', () => {
     // isFlippedがtrueになることを確認
     expect((wrapper.vm as any).isFlipped).toBe(true);
 
-    // 地域を変更
-    const select = wrapper.find('#studyRegion');
-    await select.setValue('Europe');
+    // カテゴリを変更
+    const select = wrapper.find('#studyCategory');
+    await select.setValue('Mozart');
     await wrapper.vm.$nextTick();
 
     // isFlippedがfalseに戻ることを確認
@@ -258,43 +258,10 @@ describe('Study.vue', () => {
     expect((wrapper.vm as any).isFlipped).toBe(false);
   });
 
-  it('複数の首都を持つ国の場合、最初の首都が表示される', async () => {
-    const countriesStore = useCountriesStore();
-    countriesStore.countries = [
-      {
-        id: 'za',
-        name: '南アフリカ',
-        capital: ['プレトリア', 'ケープタウン', 'ブルームフォンテーン'],
-        continent: 'Africa',
-        flag_image_url: '/flags/za.svg',
-        map_image_url: '/maps/za.svg',
-        description: '説明',
-        summary: '概要',
-      },
-    ];
-    countriesStore.loading = false;
-
-    const wrapper = mount(Study, {
-      global: {
-        plugins: [router],
-      },
-    });
-
-    await wrapper.vm.$nextTick();
-
-    const currentCountry = (wrapper.vm as any).currentCountry;
-    expect(currentCountry).toBeDefined();
-    expect(currentCountry?.name).toBe('南アフリカ');
-
-    if (Array.isArray(currentCountry?.capital)) {
-      expect(currentCountry.capital[0]).toBe('プレトリア');
-    }
-  });
-
   it('ローディング中は読み込みメッセージが表示される', () => {
-    const countriesStore = useCountriesStore();
-    countriesStore.loading = true;
-    countriesStore.countries = [];
+    const musicStore = useMusicStore();
+    musicStore.loading = true;
+    musicStore.pieces = [];
 
     const wrapper = mount(Study, {
       global: {
@@ -306,9 +273,9 @@ describe('Study.vue', () => {
   });
 
   it('エラー時はエラーメッセージが表示される', () => {
-    const countriesStore = useCountriesStore();
-    countriesStore.loading = false;
-    countriesStore.error = 'データ取得エラー';
+    const musicStore = useMusicStore();
+    musicStore.loading = false;
+    musicStore.error = 'データ取得エラー';
 
     const wrapper = mount(Study, {
       global: {
@@ -319,11 +286,11 @@ describe('Study.vue', () => {
     expect(wrapper.text()).toContain('データ取得エラー');
   });
 
-  it('国データがない場合、メッセージが表示される', () => {
-    const countriesStore = useCountriesStore();
-    countriesStore.loading = false;
-    countriesStore.error = null;
-    countriesStore.countries = [];
+  it('楽曲データがない場合、メッセージが表示される', () => {
+    const musicStore = useMusicStore();
+    musicStore.loading = false;
+    musicStore.error = null;
+    musicStore.pieces = [];
 
     const wrapper = mount(Study, {
       global: {
@@ -331,12 +298,12 @@ describe('Study.vue', () => {
       },
     });
 
-    // 国データがない場合は何も表示されない（filteredCountriesが空）
-    const filteredCountries = (wrapper.vm as any).filteredCountries;
-    expect(filteredCountries.length).toBe(0);
+    // 楽曲データがない場合は何も表示されない（filteredPiecesが空）
+    const filteredPieces = (wrapper.vm as any).filteredPieces;
+    expect(filteredPieces.length).toBe(0);
   });
 
-  it('国旗一覧が表示される', async () => {
+  it('楽曲一覧が表示される', async () => {
     const wrapper = mount(Study, {
       global: {
         plugins: [router],
@@ -345,38 +312,9 @@ describe('Study.vue', () => {
 
     await wrapper.vm.$nextTick();
 
-    // filteredCountriesの数を確認
-    const filteredCountries = (wrapper.vm as any).filteredCountries;
-    expect(filteredCountries.length).toBe(3);
-  });
-
-  it('国旗一覧の国旗をクリックすると上の国旗が変わる', async () => {
-    const wrapper = mount(Study, {
-      global: {
-        plugins: [router],
-      },
-    });
-
-    // 初期状態でcurrentIndexは0
-    expect((wrapper.vm as any).currentIndex).toBe(0);
-
-    // 国旗一覧のボタンを取得
-    const flagButtons = wrapper.findAll('button').filter((btn) => {
-      const img = btn.find('img');
-      return img.exists() && img.attributes('alt')?.includes('の国旗');
-    });
-
-    // 3番目の国旗（イギリス）をクリック
-    if (flagButtons[2]) {
-      await flagButtons[2].trigger('click');
-      await wrapper.vm.$nextTick();
-
-      // currentIndexが2になることを確認
-      expect((wrapper.vm as any).currentIndex).toBe(2);
-
-      // カードが表面に戻ることを確認
-      expect((wrapper.vm as any).isFlipped).toBe(false);
-    }
+    // filteredPiecesの数を確認
+    const filteredPieces = (wrapper.vm as any).filteredPieces;
+    expect(filteredPieces.length).toBe(3);
   });
 
   it('クイズ形式が選択できる', async () => {
@@ -386,56 +324,56 @@ describe('Study.vue', () => {
       },
     });
 
-    // 初期状態は「国旗→国名」
-    expect((wrapper.vm as any).quizMode).toBe('flag-to-name');
+    // 初期状態は「曲を聴いて→曲名」
+    expect((wrapper.vm as any).quizMode).toBe('audio-to-title');
 
     // プルダウンを取得
     const quizModeSelect = wrapper.find('#quizMode');
     expect(quizModeSelect.exists()).toBe(true);
 
-    // 「国名→国旗」に変更
-    await quizModeSelect.setValue('name-to-flag');
-    expect((wrapper.vm as any).quizMode).toBe('name-to-flag');
+    // 「曲名→作曲家」に変更
+    await quizModeSelect.setValue('title-to-composer');
+    expect((wrapper.vm as any).quizMode).toBe('title-to-composer');
   });
 
-  it('国旗→国名モードでは国旗が表示される', () => {
+  it('曲を聴いて→曲名モードでは音楽プレーヤーが表示される', () => {
     const wrapper = mount(Study, {
       global: {
         plugins: [router],
       },
     });
 
-    // 国旗→国名モード（デフォルト）
-    const flagImage = wrapper.find('img[alt="日本の国旗"]');
-    expect(flagImage.exists()).toBe(true);
+    // 曲を聴いて→曲名モード（デフォルト）
+    expect(wrapper.text()).toContain('🎵');
+    expect(wrapper.text()).toContain('再生');
   });
 
-  it('国名→国旗モードでは表に国名と詳細情報が表示される', async () => {
+  it('曲名→作曲家モードでは表に詳細情報が表示される', async () => {
     const wrapper = mount(Study, {
       global: {
         plugins: [router],
       },
     });
 
-    // 国名→国旗モードに変更
+    // 曲名→作曲家モードに変更
     const quizModeSelect = wrapper.find('#quizMode');
-    await quizModeSelect.setValue('name-to-flag');
+    await quizModeSelect.setValue('title-to-composer');
     await flushPromises();
     await wrapper.vm.$nextTick();
 
     // quizModeが変更されたことを確認
-    expect((wrapper.vm as any).quizMode).toBe('name-to-flag');
+    expect((wrapper.vm as any).quizMode).toBe('title-to-composer');
   });
 
-  it('国旗→国名モードでカードを裏返すと国名と詳細情報が表示される', async () => {
+  it('曲を聴いて→曲名モードでカードを裏返すと曲名と詳細情報が表示される', async () => {
     const wrapper = mount(Study, {
       global: {
         plugins: [router],
       },
     });
 
-    // 初期状態は国旗→国名モード
-    expect((wrapper.vm as any).quizMode).toBe('flag-to-name');
+    // 初期状態は曲を聴いて→曲名モード
+    expect((wrapper.vm as any).quizMode).toBe('audio-to-title');
 
     // カードをクリックして裏返す
     const card = wrapper.find('.cursor-pointer[class*="backface-hidden"]');

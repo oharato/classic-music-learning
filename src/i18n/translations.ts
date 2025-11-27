@@ -15,9 +15,9 @@ export interface Translations {
     nickname: string;
     nicknamePlaceholder: string;
     quizFormat: string;
-    flagToName: string;
-    nameToFlag: string;
-    region: string;
+    audioToTitle: string;
+    titleToComposer: string;
+    category: string;
     numberOfQuestions: string;
     questions5: string;
     questions10: string;
@@ -38,7 +38,8 @@ export interface Translations {
     elapsedTime: string;
     seconds: string;
     loadError: string;
-    flagAlt: string;
+    playAudio: string;
+    pauseAudio: string;
     noData: string;
     goToSetup: string;
   };
@@ -47,7 +48,7 @@ export interface Translations {
     settings: string;
     nickname: string;
     quizFormat: string;
-    region: string;
+    category: string;
     questionCount: string;
     questions: string;
     correctAnswers: string;
@@ -75,39 +76,43 @@ export interface Translations {
     registeredAt: string;
     loading: string;
     noData: string;
-    region: string;
+    category: string;
     quizFormat: string;
   };
   study: {
     title: string;
     quizMode: string;
-    flagToName: string;
-    nameToFlag: string;
-    region: string;
-    name: string;
-    capital: string;
-    continent: string;
-    flagOrigin: string;
-    summary: string;
+    audioToTitle: string;
+    titleToComposer: string;
+    category: string;
+    title_label: string;
+    composer: string;
+    genre: string;
+    description: string;
+    trivia: string;
     noInformation: string;
     keyboardHint: string;
     next: string;
     prev: string;
+    playAudio: string;
+    pauseAudio: string;
   };
   quizFormat: {
-    flagToName: string;
-    nameToFlag: string;
-    flagToNameLong: string;
-    nameToFlagLong: string;
+    audioToTitle: string;
+    titleToComposer: string;
+    audioToTitleLong: string;
+    titleToComposerLong: string;
   };
-  region: {
+  category: {
     all: string;
-    africa: string;
-    asia: string;
-    europe: string;
-    northAmerica: string;
-    southAmerica: string;
-    oceania: string;
+    beethoven: string;
+    mozart: string;
+    bach: string;
+    chopin: string;
+    tchaikovsky: string;
+    vivaldi: string;
+    brahms: string;
+    pachelbel: string;
   };
 }
 
@@ -117,9 +122,9 @@ export const translations: Record<Language, Translations> = {
       backToHome: '< トップページに戻る',
     },
     home: {
-      title: '国旗学習ゲーム',
+      title: 'クラシック音楽学習ゲーム',
       startQuiz: 'クイズに挑戦する',
-      study: '国旗を学習する',
+      study: '楽曲を学習する',
       viewRanking: 'ランキングを見る',
     },
     quizSetup: {
@@ -127,9 +132,9 @@ export const translations: Record<Language, Translations> = {
       nickname: 'ニックネーム（最大20文字）',
       nicknamePlaceholder: 'ニックネームを入力',
       quizFormat: 'クイズ形式',
-      flagToName: '国旗 → 国名',
-      nameToFlag: '国名 → 国旗',
-      region: '出題範囲',
+      audioToTitle: '曲を聴いて → 曲名',
+      titleToComposer: '曲名 → 作曲家',
+      category: '出題範囲',
       numberOfQuestions: '問題数',
       questions5: '5問',
       questions10: '10問',
@@ -149,7 +154,8 @@ export const translations: Record<Language, Translations> = {
       elapsedTime: '経過時間',
       seconds: '秒',
       loadError: 'データの読み込みに失敗しました',
-      flagAlt: '国旗',
+      playAudio: '再生',
+      pauseAudio: '一時停止',
       noData: 'クイズデータがありません。設定画面に戻ってください。',
       goToSetup: 'クイズ設定へ',
     },
@@ -158,7 +164,7 @@ export const translations: Record<Language, Translations> = {
       settings: 'クイズ設定',
       nickname: 'ニックネーム',
       quizFormat: 'クイズ形式',
-      region: '出題範囲',
+      category: '出題範囲',
       questionCount: '問題数',
       questions: '問',
       correctAnswers: '正解数',
@@ -186,39 +192,43 @@ export const translations: Record<Language, Translations> = {
       registeredAt: '登録日時',
       loading: 'ランキングを読み込み中...',
       noData: 'まだランキングデータがありません。',
-      region: '出題範囲',
+      category: '出題範囲',
       quizFormat: 'クイズ形式',
     },
     study: {
       title: '学習モード',
       quizMode: 'クイズ形式',
-      flagToName: '国旗 → 国名',
-      nameToFlag: '国名 → 国旗',
-      region: '地域',
-      name: '国名',
-      capital: '首都',
-      continent: '大陸',
-      flagOrigin: '国旗の由来',
-      summary: '概要',
+      audioToTitle: '曲を聴いて → 曲名',
+      titleToComposer: '曲名 → 作曲家',
+      category: 'カテゴリ',
+      title_label: '曲名',
+      composer: '作曲家',
+      genre: 'ジャンル',
+      description: '解説',
+      trivia: 'トリビア',
       noInformation: '情報がありません',
       keyboardHint: '矢印キーで移動、スペースキーで表裏切り替え',
       next: '次へ →',
       prev: '← 前へ',
+      playAudio: '再生',
+      pauseAudio: '一時停止',
     },
     quizFormat: {
-      flagToName: '国旗 → 国名',
-      nameToFlag: '国名 → 国旗',
-      flagToNameLong: '国旗を見て国名を選ぶ',
-      nameToFlagLong: '国名を見て国旗を選ぶ',
+      audioToTitle: '曲 → 曲名',
+      titleToComposer: '曲名 → 作曲家',
+      audioToTitleLong: '曲を聴いて曲名を選ぶ',
+      titleToComposerLong: '曲名を見て作曲家を選ぶ',
     },
-    region: {
-      all: '全世界',
-      africa: 'アフリカ',
-      asia: 'アジア',
-      europe: 'ヨーロッパ',
-      northAmerica: '北アメリカ',
-      southAmerica: '南アメリカ',
-      oceania: 'オセアニア',
+    category: {
+      all: 'すべて',
+      beethoven: 'ベートーヴェン',
+      mozart: 'モーツァルト',
+      bach: 'バッハ',
+      chopin: 'ショパン',
+      tchaikovsky: 'チャイコフスキー',
+      vivaldi: 'ヴィヴァルディ',
+      brahms: 'ブラームス',
+      pachelbel: 'パッヘルベル',
     },
   },
   en: {
@@ -226,9 +236,9 @@ export const translations: Record<Language, Translations> = {
       backToHome: '< Back to Home',
     },
     home: {
-      title: 'World Flags Learning Game',
+      title: 'Classical Music Learning Game',
       startQuiz: 'Start Quiz',
-      study: 'Study Flags',
+      study: 'Study Music',
       viewRanking: 'View Ranking',
     },
     quizSetup: {
@@ -236,9 +246,9 @@ export const translations: Record<Language, Translations> = {
       nickname: 'Nickname (max 20 characters)',
       nicknamePlaceholder: 'Enter nickname',
       quizFormat: 'Quiz Format',
-      flagToName: 'Flag -> Name',
-      nameToFlag: 'Name -> Flag',
-      region: 'Region',
+      audioToTitle: 'Listen -> Title',
+      titleToComposer: 'Title -> Composer',
+      category: 'Category',
       numberOfQuestions: 'Number of Questions',
       questions5: '5 questions',
       questions10: '10 questions',
@@ -258,7 +268,8 @@ export const translations: Record<Language, Translations> = {
       elapsedTime: 'Elapsed Time',
       seconds: 'seconds',
       loadError: 'Failed to load data',
-      flagAlt: 'Flag',
+      playAudio: 'Play',
+      pauseAudio: 'Pause',
       noData: 'No quiz data. Please return to the setup screen.',
       goToSetup: 'Go to Quiz Setup',
     },
@@ -267,7 +278,7 @@ export const translations: Record<Language, Translations> = {
       settings: 'Quiz Settings',
       nickname: 'Nickname',
       quizFormat: 'Quiz Format',
-      region: 'Region',
+      category: 'Category',
       questionCount: 'Questions',
       questions: 'questions',
       correctAnswers: 'Correct',
@@ -295,39 +306,43 @@ export const translations: Record<Language, Translations> = {
       registeredAt: 'Registered At',
       loading: 'Loading ranking...',
       noData: 'No ranking data yet.',
-      region: 'Region',
+      category: 'Category',
       quizFormat: 'Quiz Format',
     },
     study: {
       title: 'Study Mode',
       quizMode: 'Quiz Format',
-      flagToName: 'Flag -> Name',
-      nameToFlag: 'Name -> Flag',
-      region: 'Region',
-      name: 'Country',
-      capital: 'Capital',
-      continent: 'Continent',
-      flagOrigin: 'Flag Origin',
-      summary: 'Summary',
+      audioToTitle: 'Listen -> Title',
+      titleToComposer: 'Title -> Composer',
+      category: 'Category',
+      title_label: 'Title',
+      composer: 'Composer',
+      genre: 'Genre',
+      description: 'Description',
+      trivia: 'Trivia',
       noInformation: 'No information available',
       keyboardHint: 'Arrow keys to navigate, Space to flip',
       next: 'Next →',
       prev: '← Prev',
+      playAudio: 'Play',
+      pauseAudio: 'Pause',
     },
     quizFormat: {
-      flagToName: 'Flag -> Name',
-      nameToFlag: 'Name -> Flag',
-      flagToNameLong: 'See flag, choose country name',
-      nameToFlagLong: 'See country name, choose flag',
+      audioToTitle: 'Music -> Title',
+      titleToComposer: 'Title -> Composer',
+      audioToTitleLong: 'Listen to music, choose title',
+      titleToComposerLong: 'See title, choose composer',
     },
-    region: {
-      all: 'All World',
-      africa: 'Africa',
-      asia: 'Asia',
-      europe: 'Europe',
-      northAmerica: 'North America',
-      southAmerica: 'South America',
-      oceania: 'Oceania',
+    category: {
+      all: 'All',
+      beethoven: 'Beethoven',
+      mozart: 'Mozart',
+      bach: 'Bach',
+      chopin: 'Chopin',
+      tchaikovsky: 'Tchaikovsky',
+      vivaldi: 'Vivaldi',
+      brahms: 'Brahms',
+      pachelbel: 'Pachelbel',
     },
   },
 };

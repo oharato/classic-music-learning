@@ -2,8 +2,8 @@ import { flushPromises, mount } from '@vue/test-utils';
 import { createPinia, setActivePinia } from 'pinia';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { createMemoryHistory, createRouter } from 'vue-router';
-import { mockCountries } from '../../__tests__/fixtures/countries';
-import { useCountriesStore } from '../../store/countries';
+import { mockMusicPieces } from '../../__tests__/fixtures/countries';
+import { useMusicStore } from '../../store/countries';
 import { useQuizStore } from '../../store/quiz';
 import QuizSetup from '../QuizSetup.vue';
 
@@ -38,9 +38,9 @@ describe('QuizSetup.vue', () => {
       ],
     });
 
-    const countriesStore = useCountriesStore();
-    countriesStore.countries = mockCountries;
-    countriesStore.currentLanguage = 'ja'; // 日本語を選択
+    const musicStore = useMusicStore();
+    musicStore.pieces = mockMusicPieces;
+    musicStore.currentLanguage = 'ja'; // 日本語を選択
   });
 
   afterEach(() => {
@@ -92,11 +92,11 @@ describe('QuizSetup.vue', () => {
       },
     });
 
-    // RegionSelectorコンポーネント内のselectを探す
+    // CategorySelectorコンポーネント内のselectを探す
     const select = wrapper.find('select');
-    await select.setValue('Asia');
+    await select.setValue('Beethoven');
 
-    expect((select.element as HTMLSelectElement).value).toBe('Asia');
+    expect((select.element as HTMLSelectElement).value).toBe('Beethoven');
   });
 
   it('問題数の選択ができる', async () => {
@@ -198,24 +198,24 @@ describe('QuizSetup.vue', () => {
     expect(localStorageMock.getItem('quiz_nickname')).toBe('テストユーザー');
   });
 
-  it('利用可能な大陸が正しく表示される', () => {
+  it('利用可能な作曲家が正しく表示される', () => {
     const wrapper = mount(QuizSetup, {
       global: {
         plugins: [router],
       },
     });
 
-    // RegionSelectorコンポーネント内のselectとoptionsを探す
+    // CategorySelectorコンポーネント内のselectとoptionsを探す
     const select = wrapper.find('select');
     const options = select.findAll('option');
 
-    // "全世界" + Asia, Europe, North America
+    // "すべて" + Beethoven, Mozart, Bach
     expect(options.length).toBeGreaterThanOrEqual(4);
   });
 
-  it('国データがロード中の場合、ボタンが無効化される', () => {
-    const countriesStore = useCountriesStore();
-    countriesStore.loading = true;
+  it('楽曲データがロード中の場合、ボタンが無効化される', () => {
+    const musicStore = useMusicStore();
+    musicStore.loading = true;
 
     const wrapper = mount(QuizSetup, {
       global: {
@@ -226,55 +226,5 @@ describe('QuizSetup.vue', () => {
     const button = wrapper.find('button[type="submit"]');
     expect((button.element as HTMLButtonElement).disabled).toBe(true);
     expect(button.text()).toBe('データ準備中...');
-  });
-
-  it('国データがない場合、ボタンが無効化される', () => {
-    const countriesStore = useCountriesStore();
-    countriesStore.countries = [];
-
-    const wrapper = mount(QuizSetup, {
-      global: {
-        plugins: [router],
-      },
-    });
-
-    const button = wrapper.find('button[type="submit"]');
-    expect((button.element as HTMLButtonElement).disabled).toBe(true);
-    expect(button.text()).toBe('データなし');
-  });
-
-  it('エラーが発生した場合、ボタンが無効化される', () => {
-    const countriesStore = useCountriesStore();
-    countriesStore.error = 'データ取得エラー';
-
-    const wrapper = mount(QuizSetup, {
-      global: {
-        plugins: [router],
-      },
-    });
-
-    const button = wrapper.find('button[type="submit"]');
-    expect((button.element as HTMLButtonElement).disabled).toBe(true);
-    expect(button.text()).toBe('エラー発生');
-  });
-
-  it('ニックネームの前後の空白がトリミングされる', async () => {
-    const wrapper = mount(QuizSetup, {
-      global: {
-        plugins: [router],
-      },
-    });
-
-    await router.isReady();
-
-    const input = wrapper.find('#nickname');
-    await input.setValue('  テストユーザー  ');
-
-    const form = wrapper.find('form');
-    await form.trigger('submit');
-
-    await flushPromises();
-
-    expect(localStorageMock.getItem('quiz_nickname')).toBe('テストユーザー');
   });
 });

@@ -3,14 +3,14 @@ import { computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import AppButton from '../components/AppButton.vue';
 import { useTranslation } from '../composables/useTranslation';
-import { useCountriesStore } from '../store/countries';
+import { useMusicStore } from '../store/countries';
 import { useQuizStore } from '../store/quiz';
 import { useRankingStore } from '../store/ranking';
 
 const router = useRouter();
 const quizStore = useQuizStore();
 const rankingStore = useRankingStore();
-const countriesStore = useCountriesStore();
+const musicStore = useMusicStore();
 const { t } = useTranslation();
 
 onMounted(() => {
@@ -19,8 +19,8 @@ onMounted(() => {
     router.push('/quiz');
     return;
   }
-  // 選択した地域とクイズ形式でランキングにスコアを登録
-  rankingStore.submitScore(quizStore.nickname, quizStore.finalScore, quizStore.quizRegion, quizStore.quizFormat);
+  // 選択したカテゴリとクイズ形式でランキングにスコアを登録
+  rankingStore.submitScore(quizStore.nickname, quizStore.finalScore, quizStore.quizCategory, quizStore.quizFormat);
 });
 
 const goToRanking = () => {
@@ -28,7 +28,7 @@ const goToRanking = () => {
   router.push({
     path: '/ranking',
     query: {
-      region: quizStore.quizRegion,
+      region: quizStore.quizCategory,
       format: quizStore.quizFormat,
       type: 'daily',
     },
@@ -39,28 +39,32 @@ const goToHome = () => {
   router.push('/');
 };
 
-// 回答履歴から選択肢のCountryオブジェクトを取得するヘルパー
-const getCountryById = (id: string) => {
-  return countriesStore.countries.find((c) => c.id === id);
+// 回答履歴から選択肢のMusicPieceオブジェクトを取得するヘルパー
+const getPieceById = (id: string) => {
+  return musicStore.pieces.find((p) => p.id === id);
 };
 
 // クイズ形式の表示名を取得
 const getQuizFormatLabel = computed(() => {
-  return quizStore.quizFormat === 'flag-to-name' ? t.value.quizFormat.flagToName : t.value.quizFormat.nameToFlag;
+  return quizStore.quizFormat === 'audio-to-title'
+    ? t.value.quizFormat.audioToTitle
+    : t.value.quizFormat.titleToComposer;
 });
 
-// 地域の表示名を取得
-const getRegionLabel = (region: string) => {
-  const regionMap: Record<string, () => string> = {
-    all: () => t.value.region.all,
-    Africa: () => t.value.region.africa,
-    Asia: () => t.value.region.asia,
-    Europe: () => t.value.region.europe,
-    'North America': () => t.value.region.northAmerica,
-    'South America': () => t.value.region.southAmerica,
-    Oceania: () => t.value.region.oceania,
+// カテゴリの表示名を取得
+const getCategoryLabel = (category: string) => {
+  const categoryMap: Record<string, () => string> = {
+    all: () => t.value.category.all,
+    Beethoven: () => t.value.category.beethoven,
+    Mozart: () => t.value.category.mozart,
+    Bach: () => t.value.category.bach,
+    Chopin: () => t.value.category.chopin,
+    Tchaikovsky: () => t.value.category.tchaikovsky,
+    Vivaldi: () => t.value.category.vivaldi,
+    Brahms: () => t.value.category.brahms,
+    Pachelbel: () => t.value.category.pachelbel,
   };
-  return regionMap[region]?.() || region;
+  return categoryMap[category]?.() || category;
 };
 </script>
 
@@ -87,8 +91,8 @@ const getRegionLabel = (region: string) => {
           <div class="font-semibold">{{ getQuizFormatLabel }}</div>
         </div>
         <div>
-          <div class="text-gray-600">{{ t.quizResult.region }}</div>
-          <div class="font-semibold">{{ getRegionLabel(quizStore.quizRegion) }}</div>
+          <div class="text-gray-600">{{ t.quizResult.category }}</div>
+          <div class="font-semibold">{{ getCategoryLabel(quizStore.quizCategory) }}</div>
         </div>
         <div>
           <div class="text-gray-600">{{ t.quizResult.questionCount }}</div>
@@ -116,27 +120,29 @@ const getRegionLabel = (region: string) => {
           <p class="font-bold text-lg mb-2">{{ t.quizResult.question }} {{ index + 1 }}</p>
           <div class="flex items-center mb-2">
             <span class="inline-block w-33 text-right mr-2">{{ t.quizResult.questionLabel }}:</span>
-            <img v-if="record.question.questionType === 'flag-to-name'" :src="record.question.correctAnswer.flag_image_url" :alt="record.question.correctAnswer.name" class="h-12 w-auto object-contain border mr-2">
-            <span v-else class="font-semibold">{{ record.question.correctAnswer.name }}</span>
+            <span v-if="record.question.questionType === 'audio-to-title'" class="font-semibold">🎵 {{ record.question.correctAnswer.title }}</span>
+            <span v-else class="font-semibold">{{ record.question.correctAnswer.title }}</span>
           </div>
           <div class="flex items-center mb-2">
             <span class="inline-block w-33 text-right mr-2">{{ t.quizResult.yourAnswer }}:</span>
-            <template v-if="record.question.questionType === 'flag-to-name'">
+            <template v-if="record.question.questionType === 'audio-to-title'">
               <span :class="{ 'text-green-700 font-bold': record.isCorrect, 'text-red-700 font-bold': !record.isCorrect }">
-                {{ getCountryById(record.selectedAnswerId)?.name || t.quizResult.unknown }}
+                {{ getPieceById(record.selectedAnswerId)?.title || t.quizResult.unknown }}
               </span>
             </template>
             <template v-else>
-              <img :src="getCountryById(record.selectedAnswerId)?.flag_image_url || ''" :alt="getCountryById(record.selectedAnswerId)?.name || t.quizResult.unknown" class="h-12 w-auto object-contain border mr-2" :class="{ 'border-green-500': record.isCorrect, 'border-red-500': !record.isCorrect }">
+              <span :class="{ 'text-green-700 font-bold': record.isCorrect, 'text-red-700 font-bold': !record.isCorrect }">
+                {{ getPieceById(record.selectedAnswerId)?.composer || t.quizResult.unknown }}
+              </span>
             </template>
           </div>
           <div v-if="!record.isCorrect" class="flex items-center">
             <span class="inline-block w-33 text-right mr-2">{{ t.quizResult.correctAnswer }}:</span>
-            <template v-if="record.question.questionType === 'flag-to-name'">
-              <span class="text-green-700 font-bold">{{ record.question.correctAnswer.name }}</span>
+            <template v-if="record.question.questionType === 'audio-to-title'">
+              <span class="text-green-700 font-bold">{{ record.question.correctAnswer.title }}</span>
             </template>
             <template v-else>
-              <img :src="record.question.correctAnswer.flag_image_url" :alt="record.question.correctAnswer.name" class="h-12 w-auto object-contain border border-green-500 mr-2">
+              <span class="text-green-700 font-bold">{{ record.question.correctAnswer.composer }}</span>
             </template>
           </div>
         </div>

@@ -1,23 +1,22 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
-import CountryDetailCard from '../components/CountryDetailCard.vue';
-import FlagCard from '../components/FlagCard.vue';
-import LazyImage from '../components/LazyImage.vue';
+import MusicDetailCard from '../components/CountryDetailCard.vue';
+import MusicCard from '../components/FlagCard.vue';
 import { useTranslation } from '../composables/useTranslation';
-import type { Country } from '../store/countries';
-import { useCountriesStore } from '../store/countries';
+import type { MusicPiece } from '../store/countries';
+import { useMusicStore } from '../store/countries';
 
-const countriesStore = useCountriesStore();
+const musicStore = useMusicStore();
 const { t } = useTranslation();
 
 const currentIndex = ref(0);
 const isFlipped = ref(false);
-const selectedRegion = ref('all');
+const selectedCategory = ref('all');
 const disableTransition = ref(false);
-const quizMode = ref<'flag-to-name' | 'name-to-flag'>('flag-to-name');
+const quizMode = ref<'audio-to-title' | 'title-to-composer'>('audio-to-title');
 
 onMounted(() => {
-  countriesStore.fetchCountries(true);
+  musicStore.fetchPieces(true);
   window.addEventListener('keydown', handleKeyDown);
 });
 
@@ -27,40 +26,64 @@ onUnmounted(() => {
 
 const handleKeyDown = (event: KeyboardEvent) => {
   if (event.code === 'ArrowLeft') {
-    prevCountry();
+    prevPiece();
   } else if (event.code === 'ArrowRight') {
-    nextCountry();
+    nextPiece();
   } else if (event.code === 'Space') {
     event.preventDefault();
     isFlipped.value = !isFlipped.value;
   }
 };
 
-const availableContinents = computed(() => {
-  const continents = new Set<string>();
-  countriesStore.countries.forEach((country) => {
-    if (country.continent && country.continent !== 'N/A') {
-      continents.add(country.continent);
+// 作曲家の正規化マップ
+const normalizeComposerMap: Record<string, string> = {
+  Beethoven: 'Beethoven',
+  ベートーヴェン: 'Beethoven',
+  Mozart: 'Mozart',
+  モーツァルト: 'Mozart',
+  Bach: 'Bach',
+  バッハ: 'Bach',
+  Chopin: 'Chopin',
+  ショパン: 'Chopin',
+  Tchaikovsky: 'Tchaikovsky',
+  チャイコフスキー: 'Tchaikovsky',
+  Vivaldi: 'Vivaldi',
+  ヴィヴァルディ: 'Vivaldi',
+  Brahms: 'Brahms',
+  ブラームス: 'Brahms',
+  Pachelbel: 'Pachelbel',
+  パッヘルベル: 'Pachelbel',
+};
+
+const availableComposers = computed(() => {
+  const composers = new Set<string>();
+  musicStore.pieces.forEach((piece) => {
+    if (piece.composer) {
+      const normalized = normalizeComposerMap[piece.composer] || piece.composer;
+      composers.add(normalized);
     }
   });
-  return Array.from(continents).sort();
+  return Array.from(composers).sort();
 });
 
-const filteredCountries = computed<Country[]>(() => {
-  if (selectedRegion.value === 'all') {
-    return countriesStore.countries;
+const filteredPieces = computed<MusicPiece[]>(() => {
+  if (selectedCategory.value === 'all') {
+    return musicStore.pieces;
   }
-  return countriesStore.countries.filter((country) => country.continent === selectedRegion.value);
+  return musicStore.pieces.filter((piece) => {
+    const normalized = normalizeComposerMap[piece.composer] || piece.composer;
+    return normalized === selectedCategory.value;
+  });
 });
 
-const currentCountry = computed(() => {
-  if (filteredCountries.value.length === 0) {
+const currentPiece = computed(() => {
+  if (filteredPieces.value.length === 0) {
     return null;
   }
-  return filteredCountries.value[currentIndex.value];
+  return filteredPieces.value[currentIndex.value];
 });
 
-watch(selectedRegion, () => {
+watch(selectedCategory, () => {
   currentIndex.value = 0;
   isFlipped.value = false;
 });
@@ -69,11 +92,11 @@ watch(quizMode, () => {
   isFlipped.value = false;
 });
 
-const nextCountry = () => {
-  if (filteredCountries.value.length === 0) return;
+const nextPiece = () => {
+  if (filteredPieces.value.length === 0) return;
 
   // Change index first, then flip the card
-  if (currentIndex.value < filteredCountries.value.length - 1) {
+  if (currentIndex.value < filteredPieces.value.length - 1) {
     currentIndex.value++;
   } else {
     currentIndex.value = 0;
@@ -88,14 +111,14 @@ const nextCountry = () => {
   }
 };
 
-const prevCountry = () => {
-  if (filteredCountries.value.length === 0) return;
+const prevPiece = () => {
+  if (filteredPieces.value.length === 0) return;
 
   // Change index first, then flip the card
   if (currentIndex.value > 0) {
     currentIndex.value--;
   } else {
-    currentIndex.value = filteredCountries.value.length - 1;
+    currentIndex.value = filteredPieces.value.length - 1;
   }
 
   if (isFlipped.value) {
@@ -111,9 +134,24 @@ const toggleFlip = () => {
   isFlipped.value = !isFlipped.value;
 };
 
-const goToCountry = (index: number) => {
+const goToPiece = (index: number) => {
   isFlipped.value = false;
   currentIndex.value = index;
+};
+
+// 作曲家表示名取得
+const getComposerDisplayName = (composer: string) => {
+  const composerMap: Record<string, string> = {
+    Beethoven: t.value.category.beethoven,
+    Mozart: t.value.category.mozart,
+    Bach: t.value.category.bach,
+    Chopin: t.value.category.chopin,
+    Tchaikovsky: t.value.category.tchaikovsky,
+    Vivaldi: t.value.category.vivaldi,
+    Brahms: t.value.category.brahms,
+    Pachelbel: t.value.category.pachelbel,
+  };
+  return composerMap[composer] || composer;
 };
 </script>
 
@@ -134,22 +172,22 @@ const goToCountry = (index: number) => {
               v-model="quizMode"
               class="p-2 border rounded-md"
             >
-              <option value="flag-to-name">{{ t.study.flagToName }}</option>
-              <option value="name-to-flag">{{ t.study.nameToFlag }}</option>
+              <option value="audio-to-title">{{ t.study.audioToTitle }}</option>
+              <option value="title-to-composer">{{ t.study.titleToComposer }}</option>
             </select>
           </div>
 
-          <!-- 大陸選択ドロップダウン -->
+          <!-- カテゴリ選択ドロップダウン -->
           <div>
-            <label for="studyRegion" class="mr-2">{{ t.study.region }}:</label>
+            <label for="studyCategory" class="mr-2">{{ t.study.category }}:</label>
             <select
-              id="studyRegion"
-              v-model="selectedRegion"
+              id="studyCategory"
+              v-model="selectedCategory"
               class="p-2 border rounded-md"
             >
-              <option value="all">{{ t.region.all }}</option>
-              <option v-for="continent in availableContinents" :key="continent" :value="continent">
-                {{ continent }}
+              <option value="all">{{ t.category.all }}</option>
+              <option v-for="composer in availableComposers" :key="composer" :value="composer">
+                {{ getComposerDisplayName(composer) }}
               </option>
             </select>
           </div>
@@ -157,23 +195,23 @@ const goToCountry = (index: number) => {
       </div>
     </div>
 
-    <div v-if="countriesStore.loading" class="flex-1 flex items-center justify-center">
+    <div v-if="musicStore.loading" class="flex-1 flex items-center justify-center">
       <div class="text-center">
         <div class="animate-spin rounded-full h-12 w-12 border-4 border-blue-500 border-t-transparent mx-auto mb-4"></div>
         <p>{{ t.ranking.loading }}</p>
       </div>
     </div>
 
-    <div v-else-if="countriesStore.error" class="flex-1 flex items-center justify-center">
+    <div v-else-if="musicStore.error" class="flex-1 flex items-center justify-center">
       <div class="text-center text-red-500">
-        <p>{{ countriesStore.error }}</p>
-        <button @click="countriesStore.fetchCountries(true)" class="mt-4 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+        <p>{{ musicStore.error }}</p>
+        <button @click="musicStore.fetchPieces(true)" class="mt-4 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
           {{ t.quizSetup.error }}
         </button>
       </div>
     </div>
 
-    <div v-else-if="currentCountry" class="flex-1 flex flex-col overflow-hidden">
+    <div v-else-if="currentPiece" class="flex-1 flex flex-col overflow-hidden">
       <div class="w-full max-w-2xl mx-auto flex-shrink-0 px-4">
         <div class="perspective-1000">
           <div 
@@ -186,15 +224,15 @@ const goToCountry = (index: number) => {
             <!-- Card Front -->
             <div class="absolute w-full h-full backface-hidden border-2 border-gray-300 rounded-lg shadow-lg p-8 bg-gray-100 cursor-pointer"
                  @click="toggleFlip">
-              <FlagCard v-if="quizMode === 'flag-to-name'" :country="currentCountry" />
-              <CountryDetailCard v-else :country="currentCountry" />
+              <MusicCard v-if="quizMode === 'audio-to-title'" :piece="currentPiece" />
+              <MusicDetailCard v-else :piece="currentPiece" />
             </div>
             
             <!-- Card Back -->
             <div class="absolute w-full h-full backface-hidden rotate-y-180 border-2 border-gray-300 rounded-lg shadow-lg p-6 bg-gray-100 cursor-pointer"
                  @click="toggleFlip">
-              <CountryDetailCard v-if="quizMode === 'flag-to-name'" :country="currentCountry" />
-              <FlagCard v-else :country="currentCountry" :flipped="true" />
+              <MusicDetailCard v-if="quizMode === 'audio-to-title'" :piece="currentPiece" />
+              <MusicCard v-else :piece="currentPiece" :flipped="true" />
             </div>
           </div>
         </div>
@@ -203,19 +241,19 @@ const goToCountry = (index: number) => {
       <div class="w-full max-w-2xl mx-auto px-4 flex-shrink-0">
         <div class="flex justify-between items-center mb-4 mt-4">
           <button 
-            @click="prevCountry" 
+            @click="prevPiece" 
             class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-            aria-label="前の国へ"
+            aria-label="前の曲へ"
           >
             {{ t.study.prev }}
           </button>
           <span class="text-lg font-semibold">
-            {{ currentIndex + 1 }} / {{ filteredCountries.length }}
+            {{ currentIndex + 1 }} / {{ filteredPieces.length }}
           </span>
           <button 
-            @click="nextCountry" 
+            @click="nextPiece" 
             class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-            aria-label="次の国へ"
+            aria-label="次の曲へ"
           >
             {{ t.study.next }}
           </button>
@@ -226,30 +264,19 @@ const goToCountry = (index: number) => {
       </div>
 
       <div class="flex-1 overflow-y-auto px-4 mt-4 pb-4">
-        <div class="w-full max-w-2xl mx-auto grid gap-2"
-             :class="quizMode === 'flag-to-name' ? 'grid-cols-5 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10' : 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5'">
+        <div class="w-full max-w-2xl mx-auto grid gap-2 grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
           <div
-            v-for="(country, index) in filteredCountries"
-            :key="country.id"
-            @click="goToCountry(index)"
+            v-for="(piece, index) in filteredPieces"
+            :key="piece.id"
+            @click="goToPiece(index)"
             :class="{
               'border-4 border-blue-500': index === currentIndex,
               'border-4 border-transparent': index !== currentIndex,
             }"
-            class="cursor-pointer rounded overflow-hidden hover:shadow-lg transition-shadow bg-gray-100 flex items-center justify-center p-1 box-border"
+            class="cursor-pointer rounded overflow-hidden hover:shadow-lg transition-shadow bg-gray-100 flex items-center justify-center p-2 box-border"
           >
-            <LazyImage
-              v-if="quizMode === 'flag-to-name'"
-              :src="country.flag_image_url"
-              :alt="country.name"
-              :eager="index === currentIndex"
-              class="w-full h-full object-contain aspect-square"
-            />
-            <span
-              v-else
-              class="text-xs sm:text-sm font-medium text-center px-2 py-4"
-            >
-              {{ country.name }}
+            <span class="text-xs sm:text-sm font-medium text-center px-2 py-4">
+              {{ piece.title }}
             </span>
           </div>
         </div>
