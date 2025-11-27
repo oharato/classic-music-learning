@@ -1,59 +1,5 @@
 [
   {
-    "id": "eine_kleine_nachtmusik",
-    "title": "アイネ・クライネ・ナハトムジーク",
-    "composer": "モーツァルト",
-    "genre": "セレナーデ",
-    "audio_url": "https://upload.wikimedia.org/wikipedia/commons/2/24/Mozart_-_Eine_kleine_Nachtmusik_-_1._Allegro.ogg",
-    "description": "セレナード第13番ト長調K.525「アイネ・クライネ・ナハトムジーク」は1787年に作曲された。ドイツ語で「小さな夜の曲」を意味し、モーツァルトの最も有名な作品の一つ。",
-    "trivia": "この曲は当初5楽章で構成されていたが、第2楽章が失われ、現在は4楽章で演奏される。なぜ失われたのかは謎のまま。"
-  },
-  {
-    "id": "symphony_40_mozart",
-    "title": "交響曲第40番",
-    "composer": "モーツァルト",
-    "genre": "交響曲",
-    "audio_url": "https://upload.wikimedia.org/wikipedia/commons/9/99/Wolfgang_Amadeus_Mozart_-_Symphony_40_g-moll_-_1._Molto_allegro.ogg",
-    "description": "交響曲第40番ト短調K.550は1788年に作曲された。モーツァルトの交響曲の中でも特に人気が高く、短調で書かれた数少ない交響曲の一つ。",
-    "trivia": "モーツァルトがこの曲を作曲した1788年の夏には、わずか6週間で第39番、第40番、第41番の3つの交響曲を完成させた。これは音楽史上最も驚異的な創作期間の一つとされている。"
-  },
-  {
-    "id": "air_on_g_string",
-    "title": "G線上のアリア",
-    "composer": "バッハ",
-    "genre": "管弦楽組曲",
-    "audio_url": "https://upload.wikimedia.org/wikipedia/commons/1/1e/Air_%28Bach%29.ogg",
-    "description": "「G線上のアリア」は、バッハの管弦楽組曲第3番ニ長調BWV1068の第2楽章。アウグスト・ヴィルヘルミがヴァイオリン独奏用に編曲し、G線のみで演奏できることからこの名前が付いた。",
-    "trivia": "オリジナルはニ長調で書かれているが、ヴィルヘルミの編曲ではハ長調に移調され、ヴァイオリンの最低弦（G線）だけで演奏できるようになっている。"
-  },
-  {
-    "id": "nocturne_op9_no2",
-    "title": "ノクターン第2番",
-    "composer": "ショパン",
-    "genre": "ノクターン",
-    "audio_url": "https://upload.wikimedia.org/wikipedia/commons/f/fd/Chopin_Nocturne_Op_9_No_2.ogg",
-    "description": "ノクターン第2番変ホ長調作品9-2は1830年から1831年にかけて作曲された。ショパンの最も有名なノクターンで、甘美なメロディが特徴。",
-    "trivia": "ショパンはこの曲を作曲した当時わずか20歳だった。「夜想曲」という形式を芸術的に高めたのはショパンの功績とされている。"
-  },
-  {
-    "id": "hungarian_dance_5",
-    "title": "ハンガリー舞曲第5番",
-    "composer": "ブラームス",
-    "genre": "舞曲",
-    "audio_url": "https://upload.wikimedia.org/wikipedia/commons/d/d8/Johannes_Brahms_-_Ungarischer_Tanz_5_g-moll.ogg",
-    "description": "ハンガリー舞曲第5番嬰ヘ短調は、ブラームスの「ハンガリー舞曲集」の中で最も有名な曲。1869年に出版され、ハンガリーの民俗音楽に基づいている。",
-    "trivia": "ブラームスはこの曲を自作として発表したが、実際にはハンガリーの民謡に基づいており、後に著作権問題が発生した。"
-  },
-  {
-    "id": "canon_pachelbel",
-    "title": "カノン",
-    "composer": "パッヘルベル",
-    "genre": "室内楽曲",
-    "audio_url": "https://upload.wikimedia.org/wikipedia/commons/6/62/Pachelbel%27s_Canon.ogg",
-    "description": "パッヘルベルのカノンは、ヨハン・パッヘルベルが1680年頃に作曲した室内楽曲。結婚式や卒業式でよく演奏され、ポピュラー音楽にも多大な影響を与えている。",
-    "trivia": "この曲のバス進行（カノン進行）は現代のポップミュージックでも非常に多く使用されており、「世界で最も使われているコード進行」とも呼ばれている。"
-  },
-  {
     "id": "tude_op_25_no_11_frdricchopin",
     "title": "練習曲作品25-11",
     "composer": "フレデリック・ショパン",
@@ -81,11 +27,47 @@
     "trivia": ""
   },
   {
+    "id": "fantaisieimpromptu_in_csharp_m_frdricchopin",
+    "title": "幻想即興曲",
+    "composer": "フレデリック・ショパン",
+    "genre": "",
+    "audio_url": "https://upload.wikimedia.org/wikipedia/commons/6/62/Frederic_Chopin_-_Fantasy_Impromptu_Opus_66.ogg",
+    "description": "",
+    "trivia": ""
+  },
+  {
+    "id": "fantaisieimpromptu_in_csharp_m_frdricchopin",
+    "title": "幻想即興曲",
+    "composer": "フレデリック・ショパン",
+    "genre": "",
+    "audio_url": "https://upload.wikimedia.org/wikipedia/commons/4/44/Muriel-Nguyen-Xuan-Chopin-fantaisie-impromptu-opus66.ogg",
+    "description": "",
+    "trivia": ""
+  },
+  {
     "id": "nocturne_no_2_in_eflat_major_o_frdricchopin",
     "title": "夜想曲第2番 (ショパン)",
     "composer": "フレデリック・ショパン",
     "genre": "",
     "audio_url": "https://upload.wikimedia.org/wikipedia/commons/c/ca/Chopin.Nocturne.Es-Dur.opus.9.2.ogg",
+    "description": "",
+    "trivia": ""
+  },
+  {
+    "id": "nocturne_no_2_in_eflat_major_o_frdricchopin",
+    "title": "夜想曲第2番 (ショパン)",
+    "composer": "フレデリック・ショパン",
+    "genre": "",
+    "audio_url": "https://upload.wikimedia.org/wikipedia/commons/2/23/Chopin_Nocturne_Op_9_No_2_scale_durations.ogg",
+    "description": "",
+    "trivia": ""
+  },
+  {
+    "id": "nocturne_no_2_in_eflat_major_o_frdricchopin",
+    "title": "夜想曲第2番 (ショパン)",
+    "composer": "フレデリック・ショパン",
+    "genre": "",
+    "audio_url": "https://upload.wikimedia.org/wikipedia/commons/5/5c/Frederic_Chopin_-_Nocturne_Eb_major_Opus_9%2C_number_2.ogg",
     "description": "",
     "trivia": ""
   },
@@ -265,6 +247,15 @@
     "title": "アイネ・クライネ・ナハトムジーク",
     "composer": "ヴォルフガング・アマデウス・モーツァルト",
     "genre": "",
+    "audio_url": "https://upload.wikimedia.org/wikipedia/commons/2/24/Mozart_-_Eine_kleine_Nachtmusik_-_1._Allegro.ogg",
+    "description": "",
+    "trivia": ""
+  },
+  {
+    "id": "eine_kleine_nachtmusik_wolfgangamadeus",
+    "title": "アイネ・クライネ・ナハトムジーク",
+    "composer": "ヴォルフガング・アマデウス・モーツァルト",
+    "genre": "",
     "audio_url": "https://upload.wikimedia.org/wikipedia/commons/4/40/Mozart_-_Serenade_No._13_for_strings_in_G_major%2C_K._525_-_Romanze.ogg",
     "description": "",
     "trivia": ""
@@ -378,6 +369,15 @@
     "trivia": ""
   },
   {
+    "id": "hungarian_dances_johannesbrahms",
+    "title": "ハンガリー舞曲",
+    "composer": "ヨハネス・ブラームス",
+    "genre": "",
+    "audio_url": "https://upload.wikimedia.org/wikipedia/commons/d/d8/Johannes_Brahms_-_Ungarischer_Tanz_5_g-moll.ogg",
+    "description": "",
+    "trivia": ""
+  },
+  {
     "id": "fantasia_in_f_minor_franzschubert",
     "title": "幻想曲D940",
     "composer": "フランツ・シューベルト",
@@ -455,6 +455,24 @@
     "composer": "アントニオ・ヴィヴァルディ",
     "genre": "",
     "audio_url": "https://upload.wikimedia.org/wikipedia/commons/f/ff/Vivaldi_-_Four_Seasons_1_Spring_mvt_1_Allegro_-_John_Harrison_violin.oga",
+    "description": "",
+    "trivia": ""
+  },
+  {
+    "id": "concerto_no_1_in_e_major_op_8__antoniovivaldi",
+    "title": "協奏曲 第1番 ホ長調 RV 269『春』",
+    "composer": "アントニオ・ヴィヴァルディ",
+    "genre": "",
+    "audio_url": "https://upload.wikimedia.org/wikipedia/commons/9/9f/Vivaldi_-_Four_Seasons_1_Spring_mvt_2_Largo_-_John_Harrison_violin.oga",
+    "description": "",
+    "trivia": ""
+  },
+  {
+    "id": "concerto_no_1_in_e_major_op_8__antoniovivaldi",
+    "title": "協奏曲 第1番 ホ長調 RV 269『春』",
+    "composer": "アントニオ・ヴィヴァルディ",
+    "genre": "",
+    "audio_url": "https://upload.wikimedia.org/wikipedia/commons/d/d9/Vivaldi_-_Four_Seasons_1_Spring_mvt_3_Allegro_-_John_Harrison_violin.oga",
     "description": "",
     "trivia": ""
   },

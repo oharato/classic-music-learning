@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import { type MusicPiece, useMusicStore } from './countries';
 
-export type QuizFormat = 'audio-to-title' | 'title-to-composer';
+export type QuizFormat = 'audio-to-title' | 'title-to-composer' | 'title-to-track';
 // QuizCategoryの型定義（作曲家別または全体）
 export type QuizCategory =
   | 'all'

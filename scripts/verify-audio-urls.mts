@@ -117,6 +117,9 @@ const main = async () => {
 
   let hasErrors = false;
   const fixes: { id: string; oldUrl: string; newUrl: string }[] = [];
+  const removed: { id: string; title: string; composer: string; url: string }[] = [];
+
+  const newMusicEn: MusicPiece[] = [];
 
   for (let i = 0; i < musicEn.length; i++) {
     const piece = musicEn[i];
@@ -126,6 +129,7 @@ const main = async () => {
 
     if (result.valid) {
       console.log(`  ✓ URL is valid`);
+      newMusicEn.push(piece);
     } else if (result.correctUrl) {
       console.log(`  ✗ URL invalid, found correct URL`);
       fixes.push({
@@ -134,21 +138,39 @@ const main = async () => {
         newUrl: result.correctUrl,
       });
 
-      // 両方のJSONを更新
-      musicEn[i].audio_url = result.correctUrl;
+      // 更新して追加
+      const updated = { ...piece, audio_url: result.correctUrl };
+      newMusicEn.push(updated);
+
+      // 両方のJSONを更新（ja 側は後で同期）
       const jaIndex = musicJa.findIndex((p) => p.id === piece.id);
       if (jaIndex >= 0) {
         musicJa[jaIndex].audio_url = result.correctUrl;
       }
+
       hasErrors = true;
     } else {
       console.log(`  ✗ URL invalid, no alternative found`);
+      // 見つからなかった曲は除外（学習モード/クイズから外す）
+      removed.push({ id: piece.id, title: piece.title, composer: piece.composer, url: piece.audio_url });
+      // ja 側からも削除
+      const jaIndex = musicJa.findIndex((p) => p.id === piece.id);
+      if (jaIndex >= 0) {
+        musicJa.splice(jaIndex, 1);
+      }
       hasErrors = true;
     }
 
     // API負荷軽減
     await new Promise((resolve) => setTimeout(resolve, 500));
   }
+
+  // newMusicEn が最終的な英語データ
+  const finalMusicEn = newMusicEn;
+
+  // 決定: 代替URLが見つかって差し替えがあった場合、または見つからない曲があって削除が発生した場合は
+  // 常に `music.ja.json` / `music.en.json` を更新して保存する。
+  const changed = fixes.length > 0 || removed.length > 0 || finalMusicEn.length !== musicEn.length;
 
   if (fixes.length > 0) {
     console.log('\n=== Fixed URLs ===');
@@ -157,15 +179,26 @@ const main = async () => {
       console.log(`  Old: ${fix.oldUrl}`);
       console.log(`  New: ${fix.newUrl}`);
     }
+  }
 
+  if (changed) {
     // 更新したデータを保存
     await fs.writeFile(musicPathJa, JSON.stringify(musicJa, null, 2));
-    await fs.writeFile(musicPathEn, JSON.stringify(musicEn, null, 2));
+    await fs.writeFile(musicPathEn, JSON.stringify(finalMusicEn, null, 2));
     console.log('\n✓ Updated music.ja.json and music.en.json');
   } else if (!hasErrors) {
     console.log('\n✓ All audio URLs are valid!');
   } else {
     console.log('\n✗ Some URLs could not be fixed automatically. Manual intervention required.');
+  }
+
+  if (removed.length > 0) {
+    console.log('\n=== Removed (no audio found) ===');
+    for (const r of removed) {
+      console.log(`\n${r.id}: ${r.title} (${r.composer})`);
+      console.log(`  URL: ${r.url}`);
+    }
+    console.log('\n✓ Removed items will no longer appear in learning/quiz data');
   }
 };
 

@@ -59,16 +59,16 @@ const fetchMusicDataFromWikidata = async (lang: 'ja' | 'en'): Promise<WikidataRe
   // Issueに記載されたSPARQLクエリを使用（言語に応じて調整）
   const query = `
 SELECT DISTINCT ?item ?itemLabel ?composerLabel ?audio WHERE {
-  # ?item は「楽曲(Q218818)」または「交響曲(Q10554360)」などのサブクラス
-  ?item wdt:P31/wdt:P279* wd:Q218818.
+  # 元の「楽曲(Q218818)」型制約を外してヒットを増やす（後で絞り込み可）
+  # ?item wdt:P31/wdt:P279* wd:Q218818.
   
   # 作曲者(P86)がいる
   ?item wdt:P86 ?composer.
   
-  # 音声ファイル(P51)を持っている (= 音源があるものに限定)
-  ?item wdt:P51 ?audio.
+  # 音声ファイル(P51)、P2042、P9901 のいずれかを持っている (= 音源があるものに限定)
+  ?item wdt:P51|wdt:P2042|wdt:P9901 ?audio.
   
-  # 有名な作曲家に絞るフィルタリング
+  # 有名な作曲家に絞るフィルタリング（リストを拡張）
   VALUES ?composer { 
     wd:Q255     # Beethoven
     wd:Q254     # Mozart
@@ -82,11 +82,21 @@ SELECT DISTINCT ?item ?itemLabel ?composerLabel ?audio WHERE {
     wd:Q106630  # Pachelbel
     wd:Q7312    # Handel
     wd:Q7315    # Schubert
+    wd:Q2543    # Wagner
+    wd:Q30312   # Liszt
+    wd:Q35730   # Debussy
+    wd:Q16299   # Ravel
+    wd:Q36314   # Mendelssohn
+    wd:Q3871    # Schumann
+    wd:Q7600    # Mahler
+    wd:Q28285   # Puccini
+    wd:Q31202   # Rossini
+    wd:Q34428   # Saint-Saëns
   }
 
   SERVICE wikibase:label { bd:serviceParam wikibase:language "${lang},en". }
 }
-LIMIT 200
+LIMIT 1000
 `;
 
   try {
@@ -152,6 +162,8 @@ const main = async () => {
   const musicPiecesJa: MusicPiece[] = [];
   const musicPiecesEn: MusicPiece[] = [];
   const processedUrls = new Set<string>();
+  // 作曲家ごとの追加数を制限（最大 10 曲／作曲家）
+  const composerCounts: Record<string, number> = {};
 
   for (const item of dataEn) {
     const audioUrl = item.audio?.value;
@@ -161,6 +173,12 @@ const main = async () => {
 
     const fileName = extractFileNameFromUrl(audioUrl);
     if (!fileName) continue;
+
+    const composerName = item.composerLabel?.value || 'unknown';
+    if ((composerCounts[composerName] || 0) >= 10) {
+      // この作曲家は既に最大件数に達しているためスキップ
+      continue;
+    }
 
     console.log(`Processing: ${item.itemLabel?.value}...`);
 
@@ -198,6 +216,9 @@ const main = async () => {
 
     musicPiecesEn.push(pieceEn);
     musicPiecesJa.push(pieceJa);
+
+    // 作曲家のカウントを増やす
+    composerCounts[composerName] = (composerCounts[composerName] || 0) + 1;
 
     console.log(`  ✓ Added: ${pieceEn.title} (${pieceEn.composer})`);
 

@@ -9,23 +9,24 @@ defineProps<{
 }>();
 
 const { t } = useTranslation();
-const isPlaying = ref(false);
 const audioElement = ref<HTMLAudioElement | null>(null);
 
-const toggleAudio = () => {
-  if (!audioElement.value) return;
-
-  if (isPlaying.value) {
-    audioElement.value.pause();
-    isPlaying.value = false;
-  } else {
-    audioElement.value.play();
-    isPlaying.value = true;
-  }
+const onPlay = (ev: Event) => {
+  // 再生時は他の audio を停止
+  const current = ev.target as HTMLAudioElement;
+  const audios = Array.from(document.querySelectorAll('audio')) as HTMLAudioElement[];
+  audios.forEach((a) => {
+    if (a !== current) {
+      try {
+        a.pause();
+        a.currentTime = 0;
+      } catch (e) {}
+    }
+  });
 };
 
 const onAudioEnded = () => {
-  isPlaying.value = false;
+  // noop for now
 };
 </script>
 
@@ -34,18 +35,16 @@ const onAudioEnded = () => {
     <!-- 音声プレーヤー -->
     <div class="mb-4 flex flex-col items-center">
       <div class="text-6xl mb-4">🎵</div>
-      <audio 
+      <audio
         ref="audioElement"
         :src="piece.audio_url"
+        @play="onPlay"
         @ended="onAudioEnded"
         preload="auto"
+        controls
+        class="w-full"
       />
-      <button
-        @click.stop="toggleAudio"
-        class="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-full font-bold text-lg transition-colors"
-      >
-        {{ isPlaying ? t.study.pauseAudio : t.study.playAudio }}
-      </button>
+      <span class="sr-only">{{ t.study.playAudio }}</span>
     </div>
     
     <!-- フリップ時は曲名を表示 -->

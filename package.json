@@ -19,6 +19,7 @@
     "batch:create-list": "tsx scripts/extract-flag-page-names.mts",
     "batch:create-music": "tsx scripts/generate-music-data.mts",
     "batch:verify-audio": "tsx scripts/verify-audio-urls.mts",
+    "batch:merge-wikidata": "tsx scripts/merge-wikidata-to-music.mts",
     "lint": "biome check .",
     "lint:fix": "biome check --write .",
     "format": "biome format --write .",

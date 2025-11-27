@@ -40,7 +40,8 @@ const displayLabel = computed(() => props.label || t.value.quizSetup.quizFormat)
       class="w-full px-2 py-1.5 md:px-3 md:py-2 text-sm md:text-base border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
     >
       <option value="audio-to-title">{{ t.quizFormat.audioToTitle }}</option>
-      <option value="title-to-composer">{{ t.quizFormat.titleToComposer }}</option>
+        <option value="title-to-composer">{{ t.quizFormat.titleToComposer }}</option>
+        <option value="title-to-track">{{ t.quizFormat.titleToTrack }}</option>
     </select>
     
     <!-- ラジオボタン版 -->

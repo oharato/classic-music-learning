@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
+import { computed, onMounted, onUnmounted, ref, watch, nextTick } from 'vue';
 import MusicDetailCard from '../components/CountryDetailCard.vue';
 import MusicCard from '../components/FlagCard.vue';
 import { useTranslation } from '../composables/useTranslation';
@@ -13,7 +13,55 @@ const currentIndex = ref(0);
 const isFlipped = ref(false);
 const selectedCategory = ref('all');
 const disableTransition = ref(false);
-const quizMode = ref<'audio-to-title' | 'title-to-composer'>('audio-to-title');
+const quizMode = ref<'audio-to-title' | 'title-to-composer' | 'title-to-track'>('audio-to-title');
+
+// Options for title-to-track mode
+const options = ref<MusicPiece[]>([]);
+const selectedOptionId = ref<string | null>(null);
+const revealAnswer = ref<boolean>(false);
+
+const shuffleArray = <T>(arr: T[]) => arr.sort(() => 0.5 - Math.random());
+
+const generateOptions = () => {
+  selectedOptionId.value = null;
+  revealAnswer.value = false;
+  if (!currentPiece.value) {
+    options.value = [];
+    return;
+  }
+  const pool = filteredPieces.value.filter((p) => p.id !== currentPiece.value!.id);
+  const picks = shuffleArray(pool).slice(0, 3);
+  const all = [...picks, currentPiece.value!];
+  options.value = shuffleArray(all);
+};
+
+// stop other audios when one option starts playing
+const handleOptionPlay = (ev: Event) => {
+  const playing = ev.target as HTMLAudioElement;
+  const audios = Array.from(document.querySelectorAll('audio')) as HTMLAudioElement[];
+  audios.forEach((a) => {
+    if (a !== playing) {
+      try {
+        a.pause();
+        a.currentTime = 0;
+      } catch (e) {}
+    }
+  });
+};
+
+const selectOption = (piece: MusicPiece) => {
+  if (revealAnswer.value) return; // 既に回答済みなら無視
+  selectedOptionId.value = piece.id;
+  revealAnswer.value = true;
+  // stop all audios
+  const audios = Array.from(document.querySelectorAll('audio')) as HTMLAudioElement[];
+  audios.forEach((a) => {
+    try {
+      a.pause();
+      a.currentTime = 0;
+    } catch (e) {}
+  });
+};
 
 onMounted(() => {
   musicStore.fetchPieces(true);
@@ -86,11 +134,21 @@ const currentPiece = computed(() => {
 watch(selectedCategory, () => {
   currentIndex.value = 0;
   isFlipped.value = false;
+  generateOptions();
 });
 
 watch(quizMode, () => {
   isFlipped.value = false;
+  generateOptions();
 });
+
+// 再生候補はデータロード後に生成
+watch(
+  () => musicStore.pieces.length,
+  () => {
+    generateOptions();
+  }
+);
 
 const nextPiece = () => {
   if (filteredPieces.value.length === 0) return;
@@ -109,6 +167,10 @@ const nextPiece = () => {
       disableTransition.value = false;
     }, 0);
   }
+  // 停止中の音声を止め、次のカードの音声を自動再生
+  stopAllAudio();
+  playCurrentAudio();
+  generateOptions();
 };
 
 const prevPiece = () => {
@@ -128,6 +190,10 @@ const prevPiece = () => {
       disableTransition.value = false;
     }, 0);
   }
+  // 停止中の音声を止め、前のカードの音声を自動再生
+  stopAllAudio();
+  playCurrentAudio();
+  generateOptions();
 };
 
 const toggleFlip = () => {
@@ -137,6 +203,44 @@ const toggleFlip = () => {
 const goToPiece = (index: number) => {
   isFlipped.value = false;
   currentIndex.value = index;
+  stopAllAudio();
+  playCurrentAudio();
+  generateOptions();
+};
+
+// DOM上の全ての audio を停止（再生中の音を止める）
+const stopAllAudio = () => {
+  try {
+    const audios = Array.from(document.querySelectorAll('audio')) as HTMLAudioElement[];
+    audios.forEach((a) => {
+      try {
+        a.pause();
+        a.currentTime = 0;
+      } catch (e) {
+        // ignore
+      }
+    });
+  } catch (e) {
+    // ignore
+  }
+};
+
+// 現在表示されているカード内の audio を自動再生する
+const playCurrentAudio = async () => {
+  await nextTick();
+  try {
+    // カード領域内の audio を選択
+    const audio = document.querySelector('.perspective-1000 audio') as HTMLAudioElement | null;
+    if (audio) {
+      try {
+        await audio.play();
+      } catch (e) {
+        // 自動再生がブラウザにより制限される場合があるので例外は無視
+      }
+    }
+  } catch (e) {
+    // ignore
+  }
 };
 
 // 作曲家表示名取得
@@ -174,6 +278,7 @@ const getComposerDisplayName = (composer: string) => {
             >
               <option value="audio-to-title">{{ t.study.audioToTitle }}</option>
               <option value="title-to-composer">{{ t.study.titleToComposer }}</option>
+              <option value="title-to-track">{{ t.quizFormat.titleToTrack || t.quizSetup.titleToTrack }}</option>
             </select>
           </div>
 
@@ -225,6 +330,31 @@ const getComposerDisplayName = (composer: string) => {
             <div class="absolute w-full h-full backface-hidden border-2 border-gray-300 rounded-lg shadow-lg p-8 bg-gray-100 cursor-pointer"
                  @click="toggleFlip">
               <MusicCard v-if="quizMode === 'audio-to-title'" :piece="currentPiece" />
+
+              <template v-else-if="quizMode === 'title-to-track'">
+                <div class="h-full overflow-auto p-2" @click.stop>
+                  <h3 class="text-2xl font-semibold mb-2">{{ currentPiece.title }}</h3>
+                  <p class="text-sm text-gray-600 mb-2">{{ getComposerDisplayName(currentPiece.composer) }}</p>
+                  <p class="text-sm text-gray-700 mb-4">{{ currentPiece.description || t.study.noInformation }}</p>
+
+                  <div class="grid gap-4 grid-cols-1 sm:grid-cols-2">
+                    <div v-for="option in options" :key="option.id"
+                         @click="selectOption(option)"
+                         @keydown.enter="selectOption(option)"
+                         role="button"
+                         tabindex="0"
+                         :class="[
+                           'p-3 border rounded-lg bg-gray-50 cursor-pointer',
+                           revealAnswer && option.id === currentPiece.id ? 'border-green-500' : '',
+                           revealAnswer && selectedOptionId === option.id && option.id !== currentPiece.id ? 'border-red-500' : ''
+                         ]">
+                      <audio :src="option.audio_url" controls @play="handleOptionPlay($event)" @click.stop preload="none" class="w-full mb-2" />
+                      <!-- result labels removed as per request -->
+                    </div>
+                  </div>
+                </div>
+              </template>
+
               <MusicDetailCard v-else :piece="currentPiece" />
             </div>
             
@@ -264,6 +394,8 @@ const getComposerDisplayName = (composer: string) => {
       </div>
 
       <div class="flex-1 overflow-y-auto px-4 mt-4 pb-4">
+        <!-- 曲名→曲 モード: 選択肢を表示 -->
+        <!-- title-to-track の専用ブロックはカード内に統合しました -->
         <div class="w-full max-w-2xl mx-auto grid gap-2 grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
           <div
             v-for="(piece, index) in filteredPieces"

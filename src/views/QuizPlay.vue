@@ -30,17 +30,34 @@ const audioElement = ref<HTMLAudioElement | null>(null);
 // データ読み込み完了状態
 const dataLoaded = ref(false);
 
-// 音声の再生/一時停止を切り替え
+// 音声の再生/一時停止を切り替え（キーボード等から）
 const toggleAudio = () => {
   if (!audioElement.value) return;
 
   if (isPlaying.value) {
     audioElement.value.pause();
-    isPlaying.value = false;
   } else {
     audioElement.value.play();
-    isPlaying.value = true;
   }
+};
+
+const onAudioPlay = (ev?: Event) => {
+  isPlaying.value = true;
+  // 再生時は他の audio を停止
+  const current = ev ? (ev.target as HTMLAudioElement) : audioElement.value;
+  const audios = Array.from(document.querySelectorAll('audio')) as HTMLAudioElement[];
+  audios.forEach((a) => {
+    if (a !== current) {
+      try {
+        a.pause();
+        a.currentTime = 0;
+      } catch (e) {}
+    }
+  });
+};
+
+const onAudioPause = () => {
+  isPlaying.value = false;
 };
 
 const onAudioEnded = () => {
@@ -207,54 +224,72 @@ const handleMouseEnter = (index: number) => {
 
       <div class="text-center p-8 border-2 border-gray-300 rounded-lg shadow-lg bg-gray-100 min-h-[200px] flex flex-col items-center justify-center relative">
         <!-- 曲を聴いて曲名を選ぶ場合: 音声プレーヤー表示 -->
-        <template v-if="quizStore.quizFormat === 'audio-to-title'">
-          <div class="text-6xl mb-4">🎵</div>
-          <audio 
-            ref="audioElement"
-            :src="quizStore.currentQuestion.correctAnswer.audio_url"
-            @ended="onAudioEnded"
-            preload="auto"
-          />
-          <button
-            @click="toggleAudio"
-            class="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-full font-bold text-lg transition-colors"
-          >
-            {{ isPlaying ? t.quizPlay.pauseAudio : t.quizPlay.playAudio }}
-          </button>
-        </template>
-        
-        <!-- 曲名を見て作曲家を選ぶ場合: 曲名表示 -->
-        <h2 v-if="quizStore.quizFormat === 'title-to-composer'" class="text-4xl font-bold">
-          {{ quizStore.currentQuestion.correctAnswer.title }}
-        </h2>
+          <template v-if="quizStore.quizFormat === 'audio-to-title'">
+            <div class="text-6xl mb-4">🎵</div>
+            <audio
+              ref="audioElement"
+              :src="quizStore.currentQuestion.correctAnswer.audio_url"
+              @play="onAudioPlay($event)"
+              @pause="onAudioPause"
+              @ended="onAudioEnded"
+              preload="auto"
+              controls
+              class="w-full mb-2"
+            />
+          </template>
+
+          <!-- 曲名を見て作曲家を選ぶ場合: 曲名表示 -->
+          <h2 v-if="quizStore.quizFormat === 'title-to-composer'" class="text-4xl font-bold">
+            {{ quizStore.currentQuestion.correctAnswer.title }}
+          </h2>
+
+          <!-- 曲名を見て音声を選ぶ場合: 曲名・作曲家・詳細を表示 -->
+          <div v-if="quizStore.quizFormat === 'title-to-track'" class="text-center">
+            <h2 class="text-4xl font-bold mb-2">{{ quizStore.currentQuestion.correctAnswer.title }}</h2>
+            <div class="text-lg text-gray-700 mb-2">{{ quizStore.currentQuestion.correctAnswer.composer }}</div>
+            <p v-if="quizStore.currentQuestion.correctAnswer.description" class="text-sm text-gray-600 max-w-xl mx-auto">{{ quizStore.currentQuestion.correctAnswer.description }}</p>
+          </div>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
-        <button
-          v-for="(option, index) in quizStore.currentQuestion.options"
-          :key="option.id"
-          @click="handleAnswer(option, index)"
-          @mouseenter="handleMouseEnter(index)"
-          @touchstart="handleMouseEnter(index)"
-          :disabled="!dataLoaded"
-          class="p-4 border-2 rounded-lg focus:outline-none bg-gray-50 transition-all"
-          :class="{
-            'border-indigo-500 ring-2 ring-indigo-500 bg-indigo-50': tappedIndex === index || (selectedIndex === index && dataLoaded),
-            'border-gray-300 hover:bg-gray-100': tappedIndex !== index && selectedIndex !== index && dataLoaded,
-            'opacity-50 cursor-not-allowed': !dataLoaded,
-            'max-md:!border-gray-300 max-md:!ring-0 max-md:!bg-gray-50': tappedIndex !== index && selectedIndex === index
-          }"
-        >
-          <!-- 曲を聴いて曲名を選ぶ場合: 曲名を表示 -->
-          <span v-if="quizStore.quizFormat === 'audio-to-title'" class="text-2xl">
-            {{ option.title }}
-          </span>
-          <!-- 曲名を見て作曲家を選ぶ場合: 作曲家名を表示 -->
-          <span v-if="quizStore.quizFormat === 'title-to-composer'" class="text-2xl">
-            {{ option.composer }}
-          </span>
-        </button>
-      </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
+          <template v-for="(option, index) in quizStore.currentQuestion.options" :key="option.id">
+            <!-- title-to-track: options are audio choices (show small player + select) -->
+            <div
+              v-if="quizStore.quizFormat === 'title-to-track'"
+              class="p-4 border-2 rounded-lg bg-gray-50"
+            >
+              <div class="flex flex-col items-center">
+                <audio :src="option.audio_url" controls preload="none" class="w-full mb-2" />
+                <button
+                  @click="handleAnswer(option, index)"
+                  :disabled="!dataLoaded"
+                  class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded font-semibold"
+                >
+                  {{ t.quizPlay.select }}
+                </button>
+              </div>
+            </div>
+
+            <!-- other formats (audio-to-title, title-to-composer) keep existing button UI -->
+            <button
+              v-else
+              @click="handleAnswer(option, index)"
+              @mouseenter="handleMouseEnter(index)"
+              @touchstart="handleMouseEnter(index)"
+              :disabled="!dataLoaded"
+              class="p-4 border-2 rounded-lg focus:outline-none bg-gray-50 transition-all"
+              :class="{
+                'border-indigo-500 ring-2 ring-indigo-500 bg-indigo-50': tappedIndex === index || (selectedIndex === index && dataLoaded),
+                'border-gray-300 hover:bg-gray-100': tappedIndex !== index && selectedIndex !== index && dataLoaded,
+                'opacity-50 cursor-not-allowed': !dataLoaded,
+                'max-md:!border-gray-300 max-md:!ring-0 max-md:!bg-gray-50': tappedIndex !== index && selectedIndex === index
+              }"
+            >
+              <span v-if="quizStore.quizFormat === 'audio-to-title'" class="text-2xl">{{ option.title }}</span>
+              <span v-if="quizStore.quizFormat === 'title-to-composer'" class="text-2xl">{{ option.composer }}</span>
+            </button>
+          </template>
+        </div>
     </div>
     <div v-else class="text-center py-10">
       <p>{{ t.quizPlay.noData }}</p>
