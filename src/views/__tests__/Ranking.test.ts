@@ -261,7 +261,7 @@ describe('Ranking.vue', () => {
   });
 
   it('URLパラメータから初期値を読み込む', async () => {
-    await router.push('/ranking?region=Asia&type=all_time&format=name-to-flag');
+    await router.push('/ranking?region=Beethoven&type=all_time&format=title-to-composer');
     await router.isReady();
 
     const wrapper = mount(Ranking, {
@@ -272,10 +272,10 @@ describe('Ranking.vue', () => {
 
     await wrapper.vm.$nextTick();
 
-    // selectedRegion, selectedType, selectedFormatの値を確認
-    expect((wrapper.vm as any).selectedRegion).toBe('Asia');
+    // selectedCategory, selectedType, selectedFormatの値を確認
+    expect((wrapper.vm as any).selectedCategory).toBe('Beethoven');
     expect((wrapper.vm as any).selectedType).toBe('all_time');
-    expect((wrapper.vm as any).selectedFormat).toBe('name-to-flag');
+    expect((wrapper.vm as any).selectedFormat).toBe('title-to-composer');
   });
 
   it('選択が変更されたらURLパラメータが更新される', async () => {

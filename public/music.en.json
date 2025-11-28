@@ -1,0 +1,56 @@
+[
+  {
+    "id": "eine_kleine_nachtmusik",
+    "title": "Eine kleine Nachtmusik",
+    "composer": "Mozart",
+    "genre": "Serenade",
+    "audio_url": "https://upload.wikimedia.org/wikipedia/commons/2/24/Mozart_-_Eine_kleine_Nachtmusik_-_1._Allegro.ogg",
+    "description": "Serenade No. 13 in G major, K. 525, 'Eine kleine Nachtmusik,' was composed in 1787. The title means 'A Little Night Music' in German and is one of Mozart's most famous works.",
+    "trivia": "The piece was originally composed in five movements, but the second movement was lost, and it is now performed in four movements. Why it was lost remains a mystery."
+  },
+  {
+    "id": "symphony_40_mozart",
+    "title": "Symphony No. 40",
+    "composer": "Mozart",
+    "genre": "Symphony",
+    "audio_url": "https://upload.wikimedia.org/wikipedia/commons/9/99/Wolfgang_Amadeus_Mozart_-_Symphony_40_g-moll_-_1._Molto_allegro.ogg",
+    "description": "Symphony No. 40 in G minor, K. 550, was composed in 1788. It is one of Mozart's most popular symphonies and one of the few written in a minor key.",
+    "trivia": "In the summer of 1788, Mozart completed three symphonies—No. 39, No. 40, and No. 41—in just six weeks. This is considered one of the most remarkable creative periods in music history."
+  },
+  {
+    "id": "air_on_g_string",
+    "title": "Air on the G String",
+    "composer": "Bach",
+    "genre": "Orchestral Suite",
+    "audio_url": "https://upload.wikimedia.org/wikipedia/commons/1/1e/Air_%28Bach%29.ogg",
+    "description": "'Air on the G String' is the second movement of Bach's Orchestral Suite No. 3 in D major, BWV 1068. August Wilhelmj arranged it for solo violin, and it can be played entirely on the G string, hence the name.",
+    "trivia": "The original is in D major, but Wilhelmj's arrangement is transposed to C major so it can be played entirely on the violin's lowest string (G string)."
+  },
+  {
+    "id": "nocturne_op9_no2",
+    "title": "Nocturne No. 2",
+    "composer": "Chopin",
+    "genre": "Nocturne",
+    "audio_url": "https://upload.wikimedia.org/wikipedia/commons/f/fd/Chopin_Nocturne_Op_9_No_2.ogg",
+    "description": "Nocturne No. 2 in E-flat major, Op. 9, No. 2, was composed between 1830 and 1831. It is Chopin's most famous nocturne, characterized by its sweet melody.",
+    "trivia": "Chopin was only 20 years old when he composed this piece. He is credited with elevating the nocturne form to an artistic level."
+  },
+  {
+    "id": "hungarian_dance_5",
+    "title": "Hungarian Dance No. 5",
+    "composer": "Brahms",
+    "genre": "Dance",
+    "audio_url": "https://upload.wikimedia.org/wikipedia/commons/d/d8/Johannes_Brahms_-_Ungarischer_Tanz_5_g-moll.ogg",
+    "description": "Hungarian Dance No. 5 in F-sharp minor is the most famous piece from Brahms's 'Hungarian Dances.' Published in 1869, it is based on Hungarian folk music.",
+    "trivia": "Brahms published this piece as his own composition, but it was actually based on Hungarian folk tunes, which later led to copyright issues."
+  },
+  {
+    "id": "canon_pachelbel",
+    "title": "Canon",
+    "composer": "Pachelbel",
+    "genre": "Chamber music",
+    "audio_url": "https://upload.wikimedia.org/wikipedia/commons/6/62/Pachelbel%27s_Canon.ogg",
+    "description": "Pachelbel's Canon is a chamber music piece composed by Johann Pachelbel around 1680. It is often performed at weddings and graduations and has greatly influenced popular music.",
+    "trivia": "The bass progression of this piece (Canon progression) is extremely common in modern pop music and is sometimes called 'the most used chord progression in the world.'"
+  }
+]

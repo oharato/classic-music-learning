@@ -1,5 +1,5 @@
 {
-  "name": "world-flags-learning",
+  "name": "classic-music-learning",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -17,6 +17,9 @@
     "test:coverage": "vitest run --coverage",
     "batch:create-data": "tsx scripts/generate-data.mts",
     "batch:create-list": "tsx scripts/extract-flag-page-names.mts",
+    "batch:create-music": "tsx scripts/generate-music-data.mts",
+    "batch:verify-audio": "tsx scripts/verify-audio-urls.mts",
+    "batch:merge-wikidata": "tsx scripts/merge-wikidata-to-music.mts",
     "lint": "biome check .",
     "lint:fix": "biome check --write .",
     "format": "biome format --write .",

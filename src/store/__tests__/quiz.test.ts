@@ -1,6 +1,6 @@
 import { createPinia, setActivePinia } from 'pinia';
 import { beforeEach, describe, expect, it } from 'vitest';
-import { useCountriesStore } from '../countries';
+import { useMusicStore } from '../countries';
 import { useQuizStore } from '../quiz';
 
 describe('Quiz Store', () => {
@@ -13,8 +13,8 @@ describe('Quiz Store', () => {
       const store = useQuizStore();
 
       expect(store.nickname).toBe('Guest');
-      expect(store.quizFormat).toBe('flag-to-name');
-      expect(store.quizRegion).toBe('all');
+      expect(store.quizFormat).toBe('audio-to-title');
+      expect(store.quizCategory).toBe('all');
       expect(store.numberOfQuestions).toBe(5);
       expect(store.questions).toEqual([]);
       expect(store.currentQuestionIndex).toBe(0);
@@ -25,46 +25,43 @@ describe('Quiz Store', () => {
   describe('setupQuiz', () => {
     it('クイズ設定を正しく保存する', () => {
       const store = useQuizStore();
-      const countriesStore = useCountriesStore();
+      const musicStore = useMusicStore();
 
-      countriesStore.countries = [
+      musicStore.pieces = [
         {
           id: '1',
-          name: '日本',
-          capital: '東京',
-          continent: 'アジア',
-          flag_image_url: '',
-          map_image_url: '',
+          title: '交響曲第5番',
+          composer: 'ベートーヴェン',
+          genre: '交響曲',
+          audio_url: '',
           description: '',
-          summary: '',
+          trivia: '',
         },
         {
           id: '2',
-          name: 'アメリカ',
-          capital: 'ワシントンD.C.',
-          continent: '北アメリカ',
-          flag_image_url: '',
-          map_image_url: '',
+          title: 'アイネ・クライネ・ナハトムジーク',
+          composer: 'モーツァルト',
+          genre: 'セレナーデ',
+          audio_url: '',
           description: '',
-          summary: '',
+          trivia: '',
         },
         {
           id: '3',
-          name: 'フランス',
-          capital: 'パリ',
-          continent: 'ヨーロッパ',
-          flag_image_url: '',
-          map_image_url: '',
+          title: 'トッカータとフーガ',
+          composer: 'バッハ',
+          genre: 'オルガン曲',
+          audio_url: '',
           description: '',
-          summary: '',
+          trivia: '',
         },
       ];
 
-      store.setupQuiz('TestUser', 'name-to-flag', 'all', 5);
+      store.setupQuiz('TestUser', 'title-to-composer', 'all', 5);
 
       expect(store.nickname).toBe('TestUser');
-      expect(store.quizFormat).toBe('name-to-flag');
-      expect(store.quizRegion).toBe('all');
+      expect(store.quizFormat).toBe('title-to-composer');
+      expect(store.quizCategory).toBe('all');
       expect(store.numberOfQuestions).toBe(5);
     });
   });
@@ -72,20 +69,19 @@ describe('Quiz Store', () => {
   describe('generateQuestions', () => {
     it('指定された問題数の問題を生成する', () => {
       const store = useQuizStore();
-      const countriesStore = useCountriesStore();
+      const musicStore = useMusicStore();
 
-      countriesStore.countries = Array.from({ length: 50 }, (_, i) => ({
+      musicStore.pieces = Array.from({ length: 50 }, (_, i) => ({
         id: String(i + 1),
-        name: `国${i + 1}`,
-        capital: `首都${i + 1}`,
-        continent: 'アジア',
-        flag_image_url: '',
-        map_image_url: '',
+        title: `曲${i + 1}`,
+        composer: 'ベートーヴェン',
+        genre: '交響曲',
+        audio_url: '',
         description: '',
-        summary: '',
+        trivia: '',
       }));
 
-      store.setupQuiz('Test', 'flag-to-name', 'all', 10);
+      store.setupQuiz('Test', 'audio-to-title', 'all', 10);
 
       expect(store.questions).toHaveLength(10);
       store.questions.forEach((question) => {
@@ -94,68 +90,64 @@ describe('Quiz Store', () => {
       });
     });
 
-    it('地域でフィルタリングされた問題を生成する', () => {
+    it('作曲家でフィルタリングされた問題を生成する', () => {
       const store = useQuizStore();
-      const countriesStore = useCountriesStore();
+      const musicStore = useMusicStore();
 
-      countriesStore.countries = [
+      musicStore.pieces = [
         {
           id: '1',
-          name: '日本',
-          capital: '東京',
-          continent: 'アジア',
-          flag_image_url: '',
-          map_image_url: '',
+          title: '交響曲第5番',
+          composer: 'ベートーヴェン',
+          genre: '交響曲',
+          audio_url: '',
           description: '',
-          summary: '',
+          trivia: '',
         },
         {
           id: '2',
-          name: '中国',
-          capital: '北京',
-          continent: 'アジア',
-          flag_image_url: '',
-          map_image_url: '',
+          title: 'エリーゼのために',
+          composer: 'ベートーヴェン',
+          genre: 'ピアノ曲',
+          audio_url: '',
           description: '',
-          summary: '',
+          trivia: '',
         },
         {
           id: '3',
-          name: 'アメリカ',
-          capital: 'ワシントンD.C.',
-          continent: 'North America',
-          flag_image_url: '',
-          map_image_url: '',
+          title: 'アイネ・クライネ・ナハトムジーク',
+          composer: 'モーツァルト',
+          genre: 'セレナーデ',
+          audio_url: '',
           description: '',
-          summary: '',
+          trivia: '',
         },
       ];
 
-      store.setupQuiz('Test', 'flag-to-name', 'Asia', 5);
+      store.setupQuiz('Test', 'audio-to-title', 'Beethoven', 5);
 
       store.questions.forEach((question) => {
-        const normalizedContinent =
-          question.correctAnswer.continent === 'アジア' ? 'Asia' : question.correctAnswer.continent;
-        expect(normalizedContinent).toBe('Asia');
+        const normalizedComposer =
+          question.correctAnswer.composer === 'ベートーヴェン' ? 'Beethoven' : question.correctAnswer.composer;
+        expect(normalizedComposer).toBe('Beethoven');
       });
     });
 
-    it('「すべて」を選択した場合、利用可能な全ての国で問題を生成する', () => {
+    it('「すべて」を選択した場合、利用可能な全ての楽曲で問題を生成する', () => {
       const store = useQuizStore();
-      const countriesStore = useCountriesStore();
+      const musicStore = useMusicStore();
 
-      countriesStore.countries = Array.from({ length: 10 }, (_, i) => ({
+      musicStore.pieces = Array.from({ length: 10 }, (_, i) => ({
         id: String(i + 1),
-        name: `国${i + 1}`,
-        capital: `首都${i + 1}`,
-        continent: 'アジア',
-        flag_image_url: '',
-        map_image_url: '',
+        title: `曲${i + 1}`,
+        composer: 'ベートーヴェン',
+        genre: '交響曲',
+        audio_url: '',
         description: '',
-        summary: '',
+        trivia: '',
       }));
 
-      store.setupQuiz('Test', 'flag-to-name', 'all', 999);
+      store.setupQuiz('Test', 'audio-to-title', 'all', 999);
 
       expect(store.questions).toHaveLength(10);
     });
@@ -180,20 +172,19 @@ describe('Quiz Store', () => {
   describe('answerQuestion', () => {
     beforeEach(() => {
       const store = useQuizStore();
-      const countriesStore = useCountriesStore();
+      const musicStore = useMusicStore();
 
-      countriesStore.countries = Array.from({ length: 20 }, (_, i) => ({
+      musicStore.pieces = Array.from({ length: 20 }, (_, i) => ({
         id: String(i + 1),
-        name: `国${i + 1}`,
-        capital: `首都${i + 1}`,
-        continent: 'アジア',
-        flag_image_url: '',
-        map_image_url: '',
+        title: `曲${i + 1}`,
+        composer: 'ベートーヴェン',
+        genre: '交響曲',
+        audio_url: '',
         description: '',
-        summary: '',
+        trivia: '',
       }));
 
-      store.setupQuiz('Test', 'flag-to-name', 'all', 5);
+      store.setupQuiz('Test', 'audio-to-title', 'all', 5);
       store.startQuiz();
     });
 

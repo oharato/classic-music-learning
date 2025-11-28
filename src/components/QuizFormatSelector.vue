@@ -39,8 +39,9 @@ const displayLabel = computed(() => props.label || t.value.quizSetup.quizFormat)
       v-model="selectedValue"
       class="w-full px-2 py-1.5 md:px-3 md:py-2 text-sm md:text-base border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
     >
-      <option value="flag-to-name">{{ t.quizFormat.flagToName }}</option>
-      <option value="name-to-flag">{{ t.quizFormat.nameToFlag }}</option>
+      <option value="audio-to-title">{{ t.quizFormat.audioToTitle }}</option>
+        <option value="title-to-composer">{{ t.quizFormat.titleToComposer }}</option>
+        <option value="title-to-track">{{ t.quizFormat.titleToTrack }}</option>
     </select>
     
     <!-- ラジオボタン版 -->
@@ -50,10 +51,10 @@ const displayLabel = computed(() => props.label || t.value.quizSetup.quizFormat)
           type="radio" 
           class="form-radio" 
           name="quizFormat" 
-          value="flag-to-name" 
+          value="audio-to-title" 
           v-model="selectedValue"
         >
-        <span class="ml-2">{{ t.quizFormat.flagToNameLong }}</span>
+        <span class="ml-2">{{ t.quizFormat.audioToTitleLong }}</span>
       </label>
       <br>
       <label class="inline-flex items-center">
@@ -61,10 +62,10 @@ const displayLabel = computed(() => props.label || t.value.quizSetup.quizFormat)
           type="radio" 
           class="form-radio" 
           name="quizFormat" 
-          value="name-to-flag" 
+          value="title-to-composer" 
           v-model="selectedValue"
         >
-        <span class="ml-2">{{ t.quizFormat.nameToFlagLong }}</span>
+        <span class="ml-2">{{ t.quizFormat.titleToComposerLong }}</span>
       </label>
     </div>
   </div>

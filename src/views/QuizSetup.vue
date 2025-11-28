@@ -3,14 +3,14 @@ import { onMounted, onUnmounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import AppButton from '../components/AppButton.vue';
 import QuizFormatSelector from '../components/QuizFormatSelector.vue';
-import RegionSelector from '../components/RegionSelector.vue';
+import CategorySelector from '../components/RegionSelector.vue';
 import { useTranslation } from '../composables/useTranslation';
-import { useCountriesStore } from '../store/countries';
-import { type QuizFormat, type QuizRegion, useQuizStore } from '../store/quiz';
+import { useMusicStore } from '../store/countries';
+import { type QuizFormat, type QuizCategory, useQuizStore } from '../store/quiz';
 
 const router = useRouter();
 const quizStore = useQuizStore();
-const countriesStore = useCountriesStore();
+const musicStore = useMusicStore();
 const { t } = useTranslation();
 
 // localStorageからニックネームを読み込む
@@ -18,13 +18,13 @@ const NICKNAME_STORAGE_KEY = 'quiz_nickname';
 const savedNickname = localStorage.getItem(NICKNAME_STORAGE_KEY);
 const nickname = ref(savedNickname || quizStore.nickname);
 const quizFormat = ref<QuizFormat>(quizStore.quizFormat);
-const quizRegion = ref<QuizRegion>(quizStore.quizRegion);
+const quizCategory = ref<QuizCategory>(quizStore.quizCategory);
 const numberOfQuestions = ref(quizStore.numberOfQuestions);
 const nicknameError = ref<string>('');
 
-// 国データがないとクイズが始められないので、ここで読み込んでおく
+// 楽曲データがないとクイズが始められないので、ここで読み込んでおく
 onMounted(() => {
-  countriesStore.fetchCountries();
+  musicStore.fetchPieces();
   window.addEventListener('keydown', handleKeydown);
 });
 
@@ -79,7 +79,7 @@ const startQuiz = () => {
   // ニックネームをトリミングして保存
   const sanitizedNickname = nickname.value.trim();
   localStorage.setItem(NICKNAME_STORAGE_KEY, sanitizedNickname);
-  quizStore.setupQuiz(sanitizedNickname, quizFormat.value, quizRegion.value, numberOfQuestions.value);
+  quizStore.setupQuiz(sanitizedNickname, quizFormat.value, quizCategory.value, numberOfQuestions.value);
   router.push('/quiz/play');
 };
 
@@ -120,9 +120,9 @@ const clearNicknameError = () => {
         variant="radio"
       />
 
-      <RegionSelector 
-        v-model="quizRegion" 
-        :label="t.quizSetup.region"
+      <CategorySelector 
+        v-model="quizCategory" 
+        :label="t.quizSetup.category"
         always-show-label
       />
 
@@ -146,11 +146,11 @@ const clearNicknameError = () => {
           variant="secondary"
           size="lg"
           full-width
-          :disabled="countriesStore.loading || !!countriesStore.error || countriesStore.countries.length === 0"
+          :disabled="musicStore.loading || !!musicStore.error || musicStore.pieces.length === 0"
         >
-          <span v-if="countriesStore.loading">{{ t.quizSetup.preparingData }}</span>
-          <span v-else-if="countriesStore.error">{{ t.quizSetup.error }}</span>
-          <span v-else-if="countriesStore.countries.length === 0">{{ t.quizSetup.noData }}</span>
+          <span v-if="musicStore.loading">{{ t.quizSetup.preparingData }}</span>
+          <span v-else-if="musicStore.error">{{ t.quizSetup.error }}</span>
+          <span v-else-if="musicStore.pieces.length === 0">{{ t.quizSetup.noData }}</span>
           <span v-else>{{ t.quizSetup.start }}</span>
         </AppButton>
         <p class="mt-2 text-sm text-gray-500 text-center">{{ t.quizSetup.keyboardHint }}</p>

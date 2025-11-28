@@ -1,14 +1,23 @@
 import { defineStore } from 'pinia';
-import { type Country, useCountriesStore } from './countries';
+import { type MusicPiece, useMusicStore } from './countries';
 
-export type QuizFormat = 'flag-to-name' | 'name-to-flag';
-// QuizRegionの型定義を拡張
-export type QuizRegion = 'all' | 'Africa' | 'Asia' | 'Europe' | 'North America' | 'South America' | 'Oceania';
+export type QuizFormat = 'audio-to-title' | 'title-to-composer' | 'title-to-track';
+// QuizCategoryの型定義（作曲家別または全体）
+export type QuizCategory =
+  | 'all'
+  | 'Beethoven'
+  | 'Mozart'
+  | 'Bach'
+  | 'Chopin'
+  | 'Tchaikovsky'
+  | 'Vivaldi'
+  | 'Brahms'
+  | 'Pachelbel';
 
 // 問題の型定義
 export interface Question {
-  correctAnswer: Country;
-  options: Country[];
+  correctAnswer: MusicPiece;
+  options: MusicPiece[];
   questionType: QuizFormat;
 }
 
@@ -22,8 +31,8 @@ export interface AnswerRecord {
 export const useQuizStore = defineStore('quiz', {
   state: () => ({
     nickname: 'Guest',
-    quizFormat: 'flag-to-name' as QuizFormat,
-    quizRegion: 'all' as QuizRegion,
+    quizFormat: 'audio-to-title' as QuizFormat,
+    quizCategory: 'all' as QuizCategory,
     numberOfQuestions: 5, // 問題数を追加
     questions: [] as Question[],
     currentQuestionIndex: 0,
@@ -34,67 +43,67 @@ export const useQuizStore = defineStore('quiz', {
   }),
   actions: {
     generateQuestions() {
-      const countriesStore = useCountriesStore();
-      if (countriesStore.countries.length === 0) {
+      const musicStore = useMusicStore();
+      if (musicStore.pieces.length === 0) {
         return;
       }
 
-      // 大陸名の正規化マップ（日本語/英語 → 英語に統一）
-      const normalizeContinentMap: Record<string, string> = {
-        Africa: 'Africa',
-        アフリカ: 'Africa',
-        Asia: 'Asia',
-        アジア: 'Asia',
-        Europe: 'Europe',
-        ヨーロッパ: 'Europe',
-        'North America': 'North America',
-        北アメリカ: 'North America',
-        'South America': 'South America',
-        南アメリカ: 'South America',
-        Oceania: 'Oceania',
-        オセアニア: 'Oceania',
-        Antarctica: 'Antarctica',
-        南極: 'Antarctica',
+      // 作曲家名の正規化マップ（日本語/英語 → 英語に統一）
+      const normalizeComposerMap: Record<string, string> = {
+        Beethoven: 'Beethoven',
+        ベートーヴェン: 'Beethoven',
+        Mozart: 'Mozart',
+        モーツァルト: 'Mozart',
+        Bach: 'Bach',
+        バッハ: 'Bach',
+        Chopin: 'Chopin',
+        ショパン: 'Chopin',
+        Tchaikovsky: 'Tchaikovsky',
+        チャイコフスキー: 'Tchaikovsky',
+        Vivaldi: 'Vivaldi',
+        ヴィヴァルディ: 'Vivaldi',
+        Brahms: 'Brahms',
+        ブラームス: 'Brahms',
+        Pachelbel: 'Pachelbel',
+        パッヘルベル: 'Pachelbel',
       };
 
-      // 選択された地域に基づいて国をフィルタリング
-      const filteredCountries =
-        this.quizRegion === 'all'
-          ? countriesStore.countries
-          : countriesStore.countries.filter((country) => {
-              const normalizedContinent = normalizeContinentMap[country.continent] || country.continent;
-              return normalizedContinent === this.quizRegion;
+      // 選択されたカテゴリに基づいて楽曲をフィルタリング
+      const filteredPieces =
+        this.quizCategory === 'all'
+          ? musicStore.pieces
+          : musicStore.pieces.filter((piece) => {
+              const normalizedComposer = normalizeComposerMap[piece.composer] || piece.composer;
+              return normalizedComposer === this.quizCategory;
             });
 
-      // 実際の問題数を決定（「すべて」が選択された場合は利用可能な全ての国）
+      // 実際の問題数を決定（「すべて」が選択された場合は利用可能な全ての楽曲）
       const actualNumberOfQuestions =
-        this.numberOfQuestions >= 999
-          ? filteredCountries.length
-          : Math.min(this.numberOfQuestions, filteredCountries.length);
+        this.numberOfQuestions >= 999 ? filteredPieces.length : Math.min(this.numberOfQuestions, filteredPieces.length);
 
-      // フィルタリングされた国からランダムに問題数分を選択
-      const selectedCountriesForQuiz = [...filteredCountries]
+      // フィルタリングされた楽曲からランダムに問題数分を選択
+      const selectedPiecesForQuiz = [...filteredPieces]
         .sort(() => 0.5 - Math.random())
         .slice(0, actualNumberOfQuestions);
 
-      this.questions = selectedCountriesForQuiz.map((correctCountry) => {
-        // 選択肢もフィルタリングされた国の中から選ぶ
-        const otherOptions = [...filteredCountries]
-          .filter((c) => c.id !== correctCountry.id)
+      this.questions = selectedPiecesForQuiz.map((correctPiece) => {
+        // 選択肢もフィルタリングされた楽曲の中から選ぶ
+        const otherOptions = [...filteredPieces]
+          .filter((p) => p.id !== correctPiece.id)
           .sort(() => 0.5 - Math.random())
           .slice(0, 3);
-        const options = [...otherOptions, correctCountry].sort(() => 0.5 - Math.random());
+        const options = [...otherOptions, correctPiece].sort(() => 0.5 - Math.random());
         return {
-          correctAnswer: correctCountry,
+          correctAnswer: correctPiece,
           options: options,
           questionType: this.quizFormat,
         };
       });
     },
-    setupQuiz(nickname: string, format: QuizFormat, region: QuizRegion, numQuestions: number) {
+    setupQuiz(nickname: string, format: QuizFormat, category: QuizCategory, numQuestions: number) {
       this.nickname = nickname;
       this.quizFormat = format;
-      this.quizRegion = region;
+      this.quizCategory = category;
       this.numberOfQuestions = numQuestions;
       this.generateQuestions();
       this.answerHistory = []; // クイズ設定時に履歴をリセット
@@ -105,17 +114,17 @@ export const useQuizStore = defineStore('quiz', {
       this.startTime = Date.now();
       this.endTime = 0;
     },
-    answerQuestion(selectedCountryId: string) {
+    answerQuestion(selectedPieceId: string) {
       const currentQuestion = this.questions[this.currentQuestionIndex];
       if (!currentQuestion) {
         return;
       }
 
-      const isCorrect = selectedCountryId === currentQuestion.correctAnswer.id;
+      const isCorrect = selectedPieceId === currentQuestion.correctAnswer.id;
 
       this.answerHistory.push({
         question: currentQuestion,
-        selectedAnswerId: selectedCountryId,
+        selectedAnswerId: selectedPieceId,
         isCorrect: isCorrect,
       });
 

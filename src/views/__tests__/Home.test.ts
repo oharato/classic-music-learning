@@ -2,7 +2,7 @@ import { mount } from '@vue/test-utils';
 import { createPinia, setActivePinia } from 'pinia';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { createMemoryHistory, createRouter } from 'vue-router';
-import { useCountriesStore } from '../../store/countries';
+import { useMusicStore } from '../../store/countries';
 import Home from '../Home.vue';
 
 describe('Home.vue', () => {
@@ -21,8 +21,8 @@ describe('Home.vue', () => {
       ],
     });
 
-    const countriesStore = useCountriesStore();
-    countriesStore.currentLanguage = 'ja'; // 日本語を選択
+    const musicStore = useMusicStore();
+    musicStore.currentLanguage = 'ja'; // 日本語を選択
   });
 
   afterEach(() => {
@@ -36,7 +36,7 @@ describe('Home.vue', () => {
       },
     });
 
-    expect(wrapper.find('h1').text()).toBe('国旗学習ゲーム');
+    expect(wrapper.find('h1').text()).toBe('クラシック音楽学習ゲーム');
   });
 
   it('言語選択ドロップダウンが表示される', () => {
@@ -62,8 +62,8 @@ describe('Home.vue', () => {
       },
     });
 
-    const countriesStore = useCountriesStore();
-    expect(countriesStore.currentLanguage).toBe('ja');
+    const musicStore = useMusicStore();
+    expect(musicStore.currentLanguage).toBe('ja');
   });
 
   it('言語を変更するとストアが更新される', async () => {
@@ -73,12 +73,12 @@ describe('Home.vue', () => {
       },
     });
 
-    const countriesStore = useCountriesStore();
+    const musicStore = useMusicStore();
     const select = wrapper.find('select');
 
     await select.setValue('en');
 
-    expect(countriesStore.currentLanguage).toBe('en');
+    expect(musicStore.currentLanguage).toBe('en');
   });
 
   it('クイズへのリンクが正しく表示される', async () => {

@@ -1,7 +1,7 @@
-import { useCountriesStore } from '../store/countries'; // 言語設定を取得するため
+import { useMusicStore } from '../store/countries'; // 言語設定を取得するため
 
 export function formatDateTime(isoString: string): string {
-  const countriesStore = useCountriesStore();
+  const musicStore = useMusicStore();
   const date = new Date(isoString);
 
   const options: Intl.DateTimeFormatOptions = {
@@ -14,7 +14,7 @@ export function formatDateTime(isoString: string): string {
     hour12: false, // 24時間表記
   };
 
-  if (countriesStore.currentLanguage === 'ja') {
+  if (musicStore.currentLanguage === 'ja') {
     // 日本語の場合: タイムゾーンは東京でタイムゾーン表示なし
     options.timeZone = 'Asia/Tokyo';
     // Intl.DateTimeFormat はタイムゾーン表示なしのオプションを直接提供しないため、

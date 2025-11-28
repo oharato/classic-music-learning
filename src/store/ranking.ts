@@ -8,7 +8,7 @@ export interface Rank {
 }
 
 export type RankingType = 'daily' | 'all_time';
-export type QuizFormat = 'flag-to-name' | 'name-to-flag';
+export type QuizFormat = 'audio-to-title' | 'title-to-composer';
 
 export const useRankingStore = defineStore('ranking', {
   state: () => ({
@@ -16,19 +16,19 @@ export const useRankingStore = defineStore('ranking', {
     myRank: null as Rank | null,
     loading: false,
     error: null as string | null,
-    currentRegion: 'all' as string,
+    currentCategory: 'all' as string,
     currentType: 'daily' as RankingType,
-    currentFormat: 'flag-to-name' as QuizFormat,
+    currentFormat: 'audio-to-title' as QuizFormat,
   }),
   actions: {
-    async fetchRanking(region: string = 'all', type: RankingType = 'daily', format: QuizFormat = 'flag-to-name') {
+    async fetchRanking(category: string = 'all', type: RankingType = 'daily', format: QuizFormat = 'audio-to-title') {
       this.loading = true;
       this.error = null;
-      this.currentRegion = region;
+      this.currentCategory = category;
       this.currentType = type;
       this.currentFormat = format;
       try {
-        const response = await fetch(`/api/ranking?region=${region}&type=${type}&format=${format}`);
+        const response = await fetch(`/api/ranking?region=${category}&type=${type}&format=${format}`);
         if (!response.ok) {
           throw new Error('ランキングの取得に失敗しました。');
         }
@@ -40,7 +40,12 @@ export const useRankingStore = defineStore('ranking', {
         this.loading = false;
       }
     },
-    async submitScore(nickname: string, score: number, region: string = 'all', format: QuizFormat = 'flag-to-name') {
+    async submitScore(
+      nickname: string,
+      score: number,
+      category: string = 'all',
+      format: QuizFormat = 'audio-to-title'
+    ) {
       this.loading = true;
       this.error = null;
       try {
@@ -49,7 +54,7 @@ export const useRankingStore = defineStore('ranking', {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ nickname, score, region, format }),
+          body: JSON.stringify({ nickname, score, region: category, format }),
         });
         if (!response.ok) {
           const errorData = await response.json();

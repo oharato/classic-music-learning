@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
-import { type Language, useCountriesStore } from '../store/countries';
+import { type Language, useMusicStore } from '../store/countries';
 
-const countriesStore = useCountriesStore();
-const selectedLanguage = ref<Language>(countriesStore.currentLanguage);
+const musicStore = useMusicStore();
+const selectedLanguage = ref<Language>(musicStore.currentLanguage);
 
 watch(selectedLanguage, (newLang) => {
-  countriesStore.setLanguage(newLang);
+  musicStore.setLanguage(newLang);
 });
 </script>
 

@@ -1,15 +1,14 @@
 import { defineStore } from 'pinia';
 
-// 国データの型定義
-export interface Country {
+// 楽曲データの型定義
+export interface MusicPiece {
   id: string;
-  name: string;
-  capital: string | string[];
-  continent: string;
-  flag_image_url: string;
-  map_image_url: string;
+  title: string;
+  composer: string;
+  genre: string;
+  audio_url: string;
   description: string;
-  summary: string;
+  trivia: string;
 }
 
 export type Language = 'ja' | 'en';
@@ -21,28 +20,28 @@ function getInitialLanguage(): Language {
   return saved === 'en' || saved === 'ja' ? saved : 'ja';
 }
 
-export const useCountriesStore = defineStore('countries', {
+export const useMusicStore = defineStore('music', {
   state: () => ({
-    countries: [] as Country[],
+    pieces: [] as MusicPiece[],
     loading: false,
     error: null as string | null,
     currentLanguage: getInitialLanguage(), // localStorageから読み込み
   }),
   actions: {
-    async fetchCountries(forceReload: boolean = false) {
-      if (this.countries.length > 0 && !forceReload) {
+    async fetchPieces(forceReload: boolean = false) {
+      if (this.pieces.length > 0 && !forceReload) {
         return; // 既に読み込み済みの場合は何もしない (強制リロードでない場合)
       }
       this.loading = true;
       this.error = null;
       try {
-        const filename = `countries.${this.currentLanguage}.json`;
+        const filename = `music.${this.currentLanguage}.json`;
         const response = await fetch(`/${filename}`);
         if (!response.ok) {
-          throw new Error(`Failed to fetch countries data for ${this.currentLanguage}`);
+          throw new Error(`Failed to fetch music data for ${this.currentLanguage}`);
         }
         const data = await response.json();
-        this.countries = data;
+        this.pieces = data;
       } catch (e: any) {
         this.error = e.message;
       } finally {
@@ -56,18 +55,18 @@ export const useCountriesStore = defineStore('countries', {
         if (typeof window !== 'undefined') {
           localStorage.setItem('language', lang);
         }
-        this.fetchCountries(true); // 言語が変わったら強制的に再読み込み
+        this.fetchPieces(true); // 言語が変わったら強制的に再読み込み
       }
     },
   },
   getters: {
-    getCountryById: (state) => (id: string) => {
-      return state.countries.find((country) => country.id === id);
+    getPieceById: (state) => (id: string) => {
+      return state.pieces.find((piece) => piece.id === id);
     },
-    // クイズ用のランダムな国リストを取得するゲッター
-    getRandomCountries: (state) => (count: number, excludeId?: string) => {
-      const filteredCountries = excludeId ? state.countries.filter((c) => c.id !== excludeId) : state.countries;
-      const shuffled = [...filteredCountries].sort(() => 0.5 - Math.random());
+    // クイズ用のランダムな楽曲リストを取得するゲッター
+    getRandomPieces: (state) => (count: number, excludeId?: string) => {
+      const filteredPieces = excludeId ? state.pieces.filter((p) => p.id !== excludeId) : state.pieces;
+      const shuffled = [...filteredPieces].sort(() => 0.5 - Math.random());
       return shuffled.slice(0, count);
     },
   },
